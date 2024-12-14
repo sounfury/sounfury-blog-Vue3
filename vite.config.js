@@ -39,7 +39,7 @@ export default defineConfig(({ mode, command }) => {
           rewrite: (p) => p.replace(/^\/dev-api/, '')
         },
         '/prod-api': {
-          target: 'https://www.sounufury.org/prod-api',
+          target: 'https://www.sounufury.top/prod-api',
           changeOrigin: true,
           rewrite: (p) => p.replace(/^\/prod-api/, '')
         }
