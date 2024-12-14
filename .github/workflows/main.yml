@@ -33,14 +33,23 @@ jobs:
         # 创建 SSH 目录
         mkdir -p ~/.ssh
 
-        # 设置默认权限掩码
-        umask 077
-        
-        # 写入私钥到文件
+        # 写入私钥
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
 
-        # 确保权限为 600
+        # 设置权限
         chmod 600 ~/.ssh/id_rsa
+
+        # 生成公钥文件
+        ssh-keygen -y -f ~/.ssh/id_rsa > ~/.ssh/id_rsa.pub
+
+        # 检查公钥是否成功生成
+        test -s ~/.ssh/id_rsa.pub || (echo "公钥生成失败！" && exit 1)
+
+        # 显示私钥和公钥文件信息
+        echo "私钥文件详情:"
+        ls -l ~/.ssh/id_rsa
+        echo "公钥文件详情:"
+        ls -l ~/.ssh/id_rsa.pub
 
 
     - name: 详细 SSH 诊断
