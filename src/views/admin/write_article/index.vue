@@ -94,7 +94,6 @@ import MarkdownEditor from '@/components/MarkdownEditor/markdown-editor.vue'; //
 import gsap from 'gsap'
 
 const route = useRoute()
-const router = useRouter()
 const isEdit = computed(() => !!route.query.id);
 
 // 引用
@@ -147,6 +146,7 @@ const initData = async () => {
         if (isEdit.value) {
             const articleRes = await getArticleDetail(route.query.id)
             const article = articleRes.data
+            
             articleForm.value = {
                 title: article.title,
                 content: article.content,
@@ -225,10 +225,10 @@ const submitForm = async () => {
             ElMessage.error(errors[0]);
             return;
         }
-
         // 获取编辑器最新内容
         articleForm.value.content = markdownEditorRef.value.getValue();
-
+        //把时间格式化为yyyy-MM-dd HH:mm:ss
+        articleForm.value.createTime = articleForm.value.createTime.toISOString().replace('T', ' ').split('.')[0]
         const submitFunc = isEdit.value ? updateArticle : addArticle;
         const params = isEdit.value ?
             { ...articleForm.value, id: route.query.id } :
