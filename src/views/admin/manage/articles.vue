@@ -119,12 +119,14 @@ const fetchArticles = async () => {
         })
         articles.value = res.data.data
         total.value = res.data.total
+        if(total.value == 0) return
 
         // 更新统计
         stats.value[0].value = res.data.total
         stats.value[1].value = res.data.data.filter(item => item.enableStatus === 1).length
         stats.value[2].value = res.data.data.filter(item => item.enableStatus === 0).length
     } catch (error) {
+
         ElMessage.error('获取文章列表失败')
     }
 }
