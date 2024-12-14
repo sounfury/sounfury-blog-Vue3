@@ -7,6 +7,7 @@ export const frontRoutes = [
     children: [
       {
         path: "/home",
+        name: "Home",
         component: () => import("@/views/front/home/index.vue"),
       },
       {

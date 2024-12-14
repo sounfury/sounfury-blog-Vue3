@@ -27,7 +27,7 @@
             <!-- Publish Date -->
             <div class="space-y-2 flex flex-col">
                 <label class="text-sm font-medium text-gray-600">发布时间</label>
-                <el-date-picker v-model="articleForm.publishTime" type="datetime" placeholder="选择发布时间" class="w-full"
+                <el-date-picker v-model="articleForm.createTime" type="datetime" placeholder="选择发布时间" class="w-full"
                     :default-time="new Date(2000, 1, 1, 0, 0, 0)" />
             </div>
 
@@ -112,7 +112,7 @@ const editorCacheId = computed(() => {
 const articleForm = ref({
     title: '',
     content: '',
-    publishTime: new Date(), // 默认当前时间
+    createTime: new Date(), // 默认当前时间
     summary: '',
     categoryId: '',
     thumbnail: '',
@@ -157,7 +157,7 @@ const initData = async () => {
                 enableStatus: article.enableStatus?article.enableStatus:0,
                 isComment: article.isComment?article.isComment:0,
                 tags: (article.tags || []).map(tag => tag.name) ,
-                publishTime:article.createTime
+                createTime:article.createTime
             }
         }
     } catch (error) {
@@ -228,7 +228,6 @@ const submitForm = async () => {
 
         // 获取编辑器最新内容
         articleForm.value.content = markdownEditorRef.value.getValue();
-        articleForm.value.createTime = new Date().toISOString();
 
         const submitFunc = isEdit.value ? updateArticle : addArticle;
         const params = isEdit.value ?

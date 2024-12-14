@@ -180,6 +180,12 @@ import { useDebounceFn } from '@vueuse/core'
 const debouncedHandleRouteChange = useDebounceFn(handleRouteChange, 50)
 
 import { watch } from 'vue'
+import useSettings from '@/store/modules/settings'
+const icon = useSettings().settings.site_icon
+// 跳转到 home 路由的方法
+const goToHome = () => {
+    router.push("/home");
+};
 
 watch(
     () => route.path,
@@ -248,7 +254,10 @@ watch(
         </div>
         <div class="flex-1 overflow-auto p-2">
             <div ref="mainContentRef"
-                class="bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl p-6 min-h-full transform-gpu">
+                class="relative bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl p-6 min-h-full transform-gpu">
+                <!-- 头像组件 -->
+                <el-avatar :size="50" :src="icon" class="absolute top-4 right-4 cursor-pointer" @click="goToHome"
+                    title="回到博客前台" />
                 <router-view v-slot="{ Component }">
                     <transition mode="out-in" enter-active-class="transition-all duration-500"
                         leave-active-class="transition-all duration-500">
@@ -259,6 +268,8 @@ watch(
                 </router-view>
             </div>
         </div>
+
+
     </div>
 </template>
 
