@@ -76,15 +76,6 @@ jobs:
             -o UserKnownHostsFile=/dev/null \
             root@$SERVER_HOST "echo 'SSH 连接成功！'"
 
-    - name: 验证构建产物
-      run: |
-        # 检查构建目录是否存在
-        test -d dist || (echo "构建目录 dist 不存在" && exit 1)
-        
-        # 列出构建产物
-        echo "构建产物列表:"
-        ls -lR dist
-
     - name: 部署到服务器
       env:
         SERVER_HOST: ${{ secrets.SERVER_HOST }}
