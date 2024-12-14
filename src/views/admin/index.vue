@@ -256,7 +256,7 @@ watch(
             <div ref="mainContentRef"
                 class="relative bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl p-6 min-h-full transform-gpu">
                 <!-- 头像组件 -->
-                <el-avatar :size="50" :src="icon" class="absolute top-4 right-4 cursor-pointer" @click="goToHome"
+                <el-avatar :size="50" :src="icon" class="absolute top-4 right-4 cursor-pointer z-50" @click="goToHome"
                     title="回到博客前台" />
                 <router-view v-slot="{ Component }">
                     <transition mode="out-in" enter-active-class="transition-all duration-500"
