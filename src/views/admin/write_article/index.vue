@@ -136,7 +136,7 @@ const initData = async () => {
             label: name,
             value: parseInt(id, 10)
         }))
-      
+
 
         // 获取标签字典
         const tagsRes = await getTagsDict()
@@ -146,18 +146,18 @@ const initData = async () => {
         if (isEdit.value) {
             const articleRes = await getArticleDetail(route.query.id)
             const article = articleRes.data
-            
+
             articleForm.value = {
                 title: article.title,
                 content: article.content,
                 summary: article.summary,
                 categoryId: article.categoryId,
                 thumbnail: article.thumbnail,
-                isTop: article.isTop?article.isTop:0,
-                enableStatus: article.enableStatus?article.enableStatus:0,
-                isComment: article.isComment?article.isComment:0,
-                tags: (article.tags || []).map(tag => tag.name) ,
-                createTime:article.createTime
+                isTop: article.isTop ? article.isTop : 0,
+                enableStatus: article.enableStatus ? article.enableStatus : 0,
+                isComment: article.isComment ? article.isComment : 0,
+                tags: (article.tags || []).map(tag => tag.name),
+                createTime: article.createTime
             }
         }
     } catch (error) {
@@ -219,28 +219,24 @@ const validateForm = () => {
 
 // 提交表单
 const submitForm = async () => {
-    try {
-        const errors = validateForm();
-        if (errors.length) {
-            ElMessage.error(errors[0]);
-            return;
-        }
-        // 获取编辑器最新内容
-        articleForm.value.content = markdownEditorRef.value.getValue();
-        //把时间格式化为yyyy-MM-dd HH:mm:ss
-        articleForm.value.createTime = articleForm.value.createTime.toISOString().replace('T', ' ').split('.')[0]
-        const submitFunc = isEdit.value ? updateArticle : addArticle;
-        const params = isEdit.value ?
-            { ...articleForm.value, id: route.query.id } :
-            articleForm.value;
-
-        await submitFunc(params);
-
-        ElMessage.success(isEdit.value ? '更新成功' : '发布成功');
-
-    } catch (error) {
-        ElMessage.error('提交失败，请检查表单');
+    const errors = validateForm();
+    if (errors.length) {
+        ElMessage.error(errors[0]);
+        return;
     }
+    // 获取编辑器最新内容
+    articleForm.value.content = markdownEditorRef.value.getValue();
+    articleForm.value.createTime = 
+    articleForm.value.createTime instanceof Date && !isNaN(articleForm.value.createTime.getTime())
+        ? articleForm.value.createTime.toISOString().replace('T', ' ').split('.')[0]
+        : new Date(articleForm.value.createTime).toISOString().replace('T', ' ').split('.')[0]; const submitFunc = isEdit.value ? updateArticle : addArticle;
+    const params = isEdit.value ?
+        { ...articleForm.value, id: route.query.id } :
+        articleForm.value;
+
+    await submitFunc(params);
+
+    ElMessage.success(isEdit.value ? '更新成功' : '发布成功');
 }
 
 // 页面动画
@@ -271,8 +267,6 @@ onMounted(async () => {
 </script>
 
 <style lang="scss" scoped>
-
-
 .title-input {
     :deep(.el-input__wrapper) {
         box-shadow: none !important;
