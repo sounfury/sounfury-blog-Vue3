@@ -90,7 +90,7 @@ const toggleSidebar = () => {
             // 折叠动画
             gsap.to(sidebarRef.value, {
                 width: '80px',
-                duration: 0.3,
+                duration: 0.2,
                 ease: 'power2.inOut'
             })
             gsap.to(menuContainerRef.value.children, {
@@ -103,14 +103,14 @@ const toggleSidebar = () => {
             // 展开动画
             gsap.to(sidebarRef.value, {
                 width: '13rem',
-                duration: 0.3,
+                duration: 0.2,
                 ease: 'power2.inOut'
             })
             gsap.to(menuContainerRef.value.children, {
                 opacity: 1,
                 x: 0,
                 stagger: 0.1,
-                duration: 0.3
+                duration: 0.2
             })
         }
     }
