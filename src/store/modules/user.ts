@@ -79,6 +79,7 @@ const useUserStore = defineStore("user", {
             this.permissions = []
             removeToken()
             resolve(null)
+            location.reload()
           })
           .catch((error) => {
             reject(error)

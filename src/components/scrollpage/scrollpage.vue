@@ -18,7 +18,6 @@ import typewriter from "@/utils/typewriter";
 const show_text = ref("");
 const text1 = ref("");
 const text2 = ref("");
-import { watchEffect } from "vue";
 
 
 const props = defineProps({

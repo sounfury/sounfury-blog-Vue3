@@ -1,6 +1,6 @@
 <template>
   <div class="nav-container">
-    <transition name="fade" @before-enter="beforeEnter" @enter="enter" @leave="leave">
+    <transition name="fade">
       <nav class="nav" :class="{ show: isShow }" v-show="isShow || isTop">
         <!-- Site name/logo section -->
         <router-link :to="logoLink" class="site-name">{{ siteName }}</router-link>
@@ -9,7 +9,8 @@
         <div class="menus">
           <template v-for="(menuItem, index) in menuItems" :key="index">
             <div class="menu-item" @mouseenter="openSubmenu(index)" @mouseleave="closeSubmenu(index)">
-              <component :is="menuItem.type === 'router' ? 'router-link' : 'a'"
+              <!-- 一级菜单 -->
+              <component v-hasRole="menuItem.requireRole || []" :is="menuItem.type === 'router' ? 'router-link' : 'a'"
                 :to="menuItem.type === 'router' ? menuItem.link : undefined"
                 :href="menuItem.type === 'external' ? menuItem.link : undefined">
                 <font-awesome-icon :icon="menuItem.icon" />
@@ -17,7 +18,7 @@
                 <i v-if="menuItem.submenu" class="fas fa-chevron-down"></i>
               </component>
 
-              <!-- Submenu handling -->
+              <!-- 二级菜单 -->
               <HovershowCard v-if="menuItem.submenu && isSubmenuOpen[index]" :numberOfLi="menuItem.submenu.length">
                 <template #item="{ index: subIndex }">
                   <component v-if="menuItem.submenu[subIndex - 1]"
@@ -31,13 +32,16 @@
               </HovershowCard>
             </div>
           </template>
+
+
         </div>
 
         <!-- Right side of navigation -->
         <div class="navright">
           <font-awesome-icon v-if="showSearch" :icon="['fas', 'magnifying-glass']" class="search"
             @click="onSearchClick" />
-          <div v-if="showLogin" @click="openLoginDialog">
+          <div class="login-btn" v-if="showLogin" @click="openLoginDialog" @mouseover="isHovering = true"
+            @mouseleave="isHovering = false">
             {{ displayUsername }}
           </div>
           <ThemeButton v-if="showThemeToggle" class="ThemeButton" />
@@ -57,6 +61,7 @@ import HovershowCard from "@/components/card/BaseCard/HovershowCard.vue"
 import ThemeButton from "@/components/buttons/ThemeButton.vue"
 import loginDialog from "@/components/dialog/login-dialog.vue"
 import useUserStore from "@/store/modules/user"
+import { ElMessage, ElMessageBox } from 'element-plus'
 
 const props = defineProps({
   // Site configuration
@@ -107,10 +112,15 @@ const isTop = ref(true)
 const dialogVisible = ref(false)
 const isSubmenuOpen = ref([])
 
+const isHovering = ref(false); // 是否 hover 的状态
 
+// 根据 hover 状态动态显示用户名或 "Log Out"
 const displayUsername = computed(() => {
-  return userStore.name || 'Login'
-})
+  if (isHovering.value && userStore.name) {
+    return 'Log Out';
+  }
+  return userStore.name || 'Login';
+});
 
 //二级菜单打开
 const openSubmenu = (index) => {
@@ -125,11 +135,41 @@ const closeSubmenu = (index) => {
 
 //登录弹窗
 const openLoginDialog = () => {
-  if (props.showLoginDialog) {
-    dialogVisible.value = true
-    emit('login')
+  const userStore = useUserStore(); // 引入 userStore
+  if (userStore.name !== '') {
+    // 弹窗提示是否退出登录
+    ElMessageBox.confirm(
+      '确定要退出登录吗？', // 弹窗内容
+      '提示', // 弹窗标题
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      }
+    )
+      .then(() => {
+        // 点击确定时执行
+        userStore.logOut();
+        ElMessage({
+          type: 'success',
+          message: '已成功退出登录',
+        });
+      })
+      .catch(() => {
+        // 点击取消时执行
+        ElMessage({
+          type: 'info',
+          message: '已取消退出登录',
+        });
+      });
+    return;
+  } else if (props.showLoginDialog) {
+    // 打开登录对话框
+    dialogVisible.value = true;
+    emit('login');
   }
-}
+};
+
 
 //处理向上滚动时显示
 const handleMouseWheel = (e) => {
@@ -161,6 +201,35 @@ onUnmounted(() => {
 
 
 <style scoped>
+.login-btn {
+  transition: all 1s ease;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.login-btn:hover {
+  transform: scale(1.05);
+  color: #007bff;
+  /* 鼠标悬停时的颜色变化 */
+}
+
+/* 文字变化动画 */
+.login-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.login-btn span {
+  display: inline-block;
+  transition: transform 1s ease;
+}
+
+.login-btn:hover span {
+  transform: translateY(-100%);
+}
+
+
+
 .search {
   font-size: 20px;
 }

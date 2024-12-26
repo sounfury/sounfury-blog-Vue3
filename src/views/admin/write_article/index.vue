@@ -1,10 +1,12 @@
 <template>
     <div class="flex gap-6 min-h-[calc(100vh-64px)] bg-white p-8">
         <!-- Left Column -->
-        <div class="flex-1 flex flex-col gap-6">
+        <div class="flex-1 flex flex-col gap-6 ">
             <!-- Title Input -->
+
+
             <el-input v-model="articleForm.title" placeholder="在此输入文章标题..."
-                class="text-2xl font-medium border-none px-0 title-input" maxlength="100" />
+                class="text-2xl font-medium border-b-4 border-y-indigo-300 px-0 title-input " maxlength="100" />
 
             <!-- Markdown Editor -->
             <div class="flex-1 editor-wrapper">
@@ -14,10 +16,11 @@
 
             <!-- Article Settings -->
             <div class="flex items-center justify-start gap-8 py-4">
-                <switchButton v-model="articleForm.isTop" active-text="置顶文章" :active-value="1" :inactive-value="0" />
+                <switchButton v-model="articleForm.isTop" active-text="置顶文章" :active-value="1" inactive-text="普通文章"
+                    :inactive-value="0" />
                 <switchButton v-model="articleForm.enableStatus" active-text="立即发布" inactive-text="存为草稿"
                     :active-value="1" :inactive-value="0" />
-                <switchButton v-model="articleForm.isComment" active-text="允许评论" :active-value="1"
+                <switchButton v-model="articleForm.isComment" active-text="允许评论" inactive-text="禁止评论" :active-value="1"
                     :inactive-value="0" />
             </div>
         </div>
@@ -113,11 +116,11 @@ const articleForm = ref({
     content: '',
     createTime: new Date(), // 默认当前时间
     summary: '',
-    categoryId: '',
+    categoryId: 1,
     thumbnail: '',
     isTop: 0,
     enableStatus: 1,
-    isComment: 1,
+    isComment: 0,
     tags: []
 })
 

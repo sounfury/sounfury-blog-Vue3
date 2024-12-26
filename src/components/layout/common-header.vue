@@ -27,7 +27,6 @@ watch(
   () => props,
   (newMeta) => {
     isShow.value = !!newMeta
-    console.log("newMeta", newMeta)
   },
   { immediate: true }
 )

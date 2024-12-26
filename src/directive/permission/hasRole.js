@@ -9,10 +9,10 @@ export default {
   mounted(el, binding, vnode) {
     const { value } = binding
     const super_admin = "ADMIN";
-
+      
     const roles = useUserStore().roles
     
-    console.log(roles);
+    console.log("你好我是");
 
     if (value && value instanceof Array && value.length > 0) {
       const roleFlag = value
@@ -23,8 +23,6 @@ export default {
       if (!hasRole) {
         el.parentNode && el.parentNode.removeChild(el)
       }
-    } else {
-      throw new Error(`请设置角色权限标签值`)
     }
   }
 }

@@ -68,10 +68,10 @@ const initEditor = () => {
     }
 }
 
-// Safer watch implementation
 watch(() => props.modelValue, (newValue) => {
-    // Ensure vditor is fully initialized before attempting to set value
     if (!vditorInstance.value) return
+    
+    console.log(vditorInstance.value);
 
     try {
         // Prevent unnecessary updates

@@ -200,8 +200,10 @@ watch(
 <template>
     <div class="flex h-screen relative overflow-hidden ">
         <!-- 侧边栏 -->
-        <div ref="sidebarRef" class=" rounded-3xl shadow-2xl relative transition-all duration-200 ease-in-out m-2 
-             backdrop-blur-md bg-white/90">
+        <div ref="sidebarRef" class="relative transition-all duration-200 ease-in-out m-2
+             backdrop-blur-md bg-white/90
+              rounded-2xl shadow-2xl 
+             ">
             <div class="flex items-center  p-6 border-b" :class="isCollapse ? 'justify-center' : 'justify-between'">
                 <h1 v-if="!isCollapse" class="text-2xl font-bold text-gray-800">
                     博客管理
@@ -252,9 +254,10 @@ watch(
                 </el-menu>
             </div>
         </div>
-        <div class="flex-1 overflow-auto p-2">
-            <div ref="mainContentRef"
-                class="relative bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl p-6 min-h-full transform-gpu">
+        <div class="flex-1 overflow-auto  m-2
+             backdrop-blur-md bg-white/90
+              rounded-2xl shadow-lg ">
+            <div ref="mainContentRef" class="relative backdrop-blur-md  p-6 min-h-full transform-gpu">
                 <!-- 头像组件 -->
                 <el-avatar :size="50" :src="icon" class="absolute top-4 right-4 cursor-pointer z-50" @click="goToHome"
                     title="回到博客前台" />
