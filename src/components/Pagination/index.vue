@@ -90,7 +90,7 @@ watchEffect(() => {
   display: flex;
   justify-content: center;
   position: relative;
-  z-index: 9999;
+  z-index: 10;
 }
 .pagination-page-list {
   display: flex;

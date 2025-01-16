@@ -5,11 +5,17 @@ import { getToken } from "./utils/auth"
 const SUPER_ADMIN = "ADMIN"
 
 router.beforeEach(async (to, from, next) => {
-
-  if (getToken() && useUserStore().roles.length === 0) {
-    await useUserStore().getInfo()
+  const hasToken = getToken()
+  if (hasToken && useUserStore().roles.length === 0) {
+    try {
+      await useUserStore().getInfo()
+    } catch (error) {
+      console.error("获取用户信息失败token过期？:", error)
+      //  引导用户重新登录
+      next()
+      return
+    }
   }
-
 
   const roles = useUserStore().roles
 

@@ -49,8 +49,12 @@ const fetchArticles = async () => {
   isPageLoaded.value = true
 }
 
-onMounted(() => {
-  fetchArticles()
+import LoadingService from "@/plugins/loading";
+onMounted(async () => {
+  LoadingService.open()
+  await fetchArticles()
+  LoadingService.close()
+  
 })
 </script>
 

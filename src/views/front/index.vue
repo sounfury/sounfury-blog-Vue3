@@ -1,11 +1,12 @@
 <template>
   <div class="index">
     <el-container class="w-full h-full ">
-      <Nav :menu-items="menuItems" :show-search="false"/>
+      <Nav :menu-items="menuItems" :show-search="false" />
       <el-main class="main">
         <commonHeader v-if="checkRouter" v-bind=useHeaderStore.$state />
         <scrollpage v-if="isHomeRoute" v-bind="typingEffectContent" />
         <div class="main">
+          <DinoLoader />
           <router-view />
         </div>
       </el-main>
@@ -24,7 +25,6 @@ import commonHeader from "@/components/layout/common-header.vue"
 import { useRoute } from "vue-router"  // 导入 useRoute
 import scrollpage from "@/components/scrollpage/scrollpage.vue"
 import useSettings from "@/store/modules/settings";
-
 
 
 const menuItems = ref([
