@@ -7,7 +7,11 @@
         <scrollpage v-if="isHomeRoute" v-bind="typingEffectContent" />
         <div class="main">
           <DinoLoader />
-          <router-view />
+          <router-view v-slot="{ Component, route }">
+            <keep-alive :include='cachedRoutes'>
+              <component :is="Component" :key="route.path" />
+            </keep-alive>
+          </router-view>
         </div>
       </el-main>
       <el-footer v-if="haveFooter">
@@ -25,7 +29,7 @@ import commonHeader from "@/components/layout/common-header.vue"
 import { useRoute } from "vue-router"  // 导入 useRoute
 import scrollpage from "@/components/scrollpage/scrollpage.vue"
 import useSettings from "@/store/modules/settings";
-
+const cachedRoutes = ['home', 'b']
 
 const menuItems = ref([
   // {

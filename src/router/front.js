@@ -7,12 +7,13 @@ export const frontRoutes = [
     children: [
       {
         path: "/home",
-        name: "Home",
+        name: "home",
         component: () => import("@/views/front/home/index.vue"),
+        meta: { keepAlive: true }, // 配置需要缓存
       },
       {
         path: "/article/:id", //博文详情页
-        name: "Article",
+        name: "article",
         component: () => import("@/views/front/article/index.vue"),
       },
       {
@@ -41,6 +42,7 @@ export const frontRoutes = [
         path: "/tags",
         name: "tags",
         component: () => import("@/views/front/tags/tags.vue"),
+        meta: { keepAlive: true }, // 配置需要缓存
       },
       {
         path: "/tags/:name",

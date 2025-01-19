@@ -1,7 +1,7 @@
 <template>
-  <div class="home p-12">
-    <div class="flex justify-center gap-12">
-      <div class="w-3/4 ">
+  <div class="home pt-12">
+    <div class="w-11/12 m-auto flex justify-center gap-14">
+      <div class="w-9/12">
         <PostCards :articles="articles" class="w-full" />
         <Pagination v-if="isPageLoaded" :total="total" :pageNum="pageQuery.page" :pageSize="pageQuery.size"
           @page-change="handlePageChange" />
@@ -12,13 +12,16 @@
     </div>
   </div>
 </template>
+<script>
+name: "Home"
+</script>
 
 <script setup>
 import PostCards from "@/components/card/MainCard/post-cards.vue"
 import Pagination from "@/components/Pagination/index.vue"
 import scrollpage from "@/components/scrollpage/scrollpage.vue"
 import asideCards from "@/components/card/MainCard/aside-cards.vue"
-
+import LoadingService from "@/plugins/loading";
 import { ref, onMounted, watch, reactive } from "vue"
 import { getArticleList } from "@/api/article"
 
@@ -49,13 +52,17 @@ const fetchArticles = async () => {
   isPageLoaded.value = true
 }
 
-import LoadingService from "@/plugins/loading";
+defineOptions({
+  name: 'home',
+})
+
+
 onMounted(async () => {
   LoadingService.open()
   await fetchArticles()
   LoadingService.close()
-  
 })
+
 </script>
 
 <style scoped></style>

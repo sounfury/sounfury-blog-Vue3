@@ -1,5 +1,6 @@
 <template>
     <router-view />
+
 </template>
 
 <script setup>
@@ -16,6 +17,4 @@ watch(useSettings().settings, (newVal, oldVal) => {
 }), { immediate: true }
 </script>
 
-<style>
-
-</style>
+<style></style>
