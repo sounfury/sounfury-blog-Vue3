@@ -1,13 +1,16 @@
 <template>
   <footer>
-    ©{{ currentYear }} By sounfury | 鲁ICP备2024121123号
+    ©{{ currentYear }} By sounfury |
+    <a href="https://beian.miit.gov.cn" target="_blank" rel="noopener noreferrer">
+      鲁ICP备2024121123号
+    </a>
   </footer>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue';
 
-const currentYear = ref(new Date().getFullYear())
+const currentYear = ref(new Date().getFullYear());
 </script>
 
 <style scoped>
@@ -24,3 +27,5 @@ footer {
   color: var(--font-color);
 }
 </style>
+
+
