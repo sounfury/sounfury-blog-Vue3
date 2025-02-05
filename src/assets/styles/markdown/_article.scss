@@ -1,0 +1,141 @@
+/** 文章区域 **/
+@use "variables" as *;
+
+.article {
+  font-family: $article-font-family-base;
+  font-size: $article-font-size-base;
+  line-height: $article-line-height-base;
+
+  * {
+    line-height: 1.3; //  保持原有 * 的样式，可能需要调整
+  }
+
+  img {
+    display: block;
+    max-height: 500px;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto 20px;
+  }
+
+  p {
+    margin: 0 0 8px;
+    color: var(--font-color); // 仍然使用 var(--font-color)，主题 scss 控制
+    line-height: 1.5; // 保持 p 的 line-height
+  }
+
+  h1 {
+    font-size: $article-h1-font-size;
+    font-weight: $article-h1-font-weight;
+    margin: 20px 0 14px;
+    color: var(--title-color); // 仍然使用 var(--title-color)，主题 scss 控制
+    position: relative;
+    font-family: $article-font-family-heading;
+
+    &::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -5px;
+
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, #ff7e5f, #feb47b);
+    }
+  }
+
+  h2,
+  h3 {
+    font-weight: 700;
+    margin: 20px 0 14px;
+    color: var(--title-color); // 仍然使用 var(--title-color)，主题 scss 控制
+    font-family: $article-font-family-heading;
+  }
+
+  h2 {
+    font-size: $article-h2-font-size;
+  }
+
+  h3 {
+    font-size: $article-h3-font-size;
+  }
+}
+
+blockquote {
+  margin: 0 0 20px;
+  padding: 12px 15px;
+  border-left: 3px solid $blockquote-border-color;
+  background-color: $blockquote-background-color;
+  color: $blockquote-text-color;
+}
+
+
+table {
+  display: table;
+  width: 100%;
+  border-spacing: 0;
+  border-collapse: collapse;
+  empty-cells: show;
+  padding-bottom: 0;
+
+  td,
+  th {
+    padding: 6px 12px;
+    border: 1px solid $light-grey-border;
+    vertical-align: middle;
+  }
+}
+
+.hljs-copy-button {
+  top: 0.3em;
+}
+
+.article {
+  ul {
+    padding-left: 40px;
+
+    li {
+      list-style-type: circle;
+      color: var(--font-color); // 仍然使用 var(--font-color)，主题 scss 控制
+    }
+  }
+
+  ol {
+    padding-left: 40px;
+
+    li {
+      list-style-type: decimal;
+    }
+  }
+
+  code li {
+    padding-left: 20px;
+  }
+
+  li::marker {
+    color: #49b1f5;
+    font-weight: 600;
+    font-size: 1.05em;
+  }
+
+  code li::marker {
+    color: $block-lineNum-color;
+  }
+
+  li:hover::marker {
+    color: rgb(255, 126, 83);
+  }
+
+  a {
+    color: $article-link-color-light; // 默认亮色主题链接颜色
+    text-decoration: none;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: $article-link-hover-color-light; // 默认亮色主题链接 hover 颜色
+      text-decoration: underline;
+    }
+  }
+}
+
+/** 文章区域 **/

@@ -42,6 +42,7 @@ pinia.use(piniaPluginPersistedstate)
 app.use(pinia)
 app.use(LoadScript)
 
+//TODO: 代码高亮指令未封装
 app.directive("highlight", {
   updated(el, binding) {
     // 在组件更新时，也更新代码块

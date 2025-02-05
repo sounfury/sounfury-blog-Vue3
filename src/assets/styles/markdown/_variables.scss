@@ -1,0 +1,43 @@
+
+// 全局字体变量 - article-font
+$article-font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+  "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
+  "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+$article-font-family-heading: -apple-system, BlinkMacSystemFont, "Segoe UI",
+  Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
+  "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+// 亮色主题字体颜色
+$article-font-color-light: #333; // 深灰色，更柔和
+$article-title-color-light: #222; // 更深的灰色，标题突出
+$article-link-color-light: #49b1f5;
+$article-link-hover-color-light: rgb(255, 126, 83);
+
+// 暗色主题字体颜色
+$article-font-color-dark: #abb2bf; // 保持原有的亮色
+$article-title-color-dark: #eee; // 偏白色，暗色主题更醒目
+$article-link-color-dark: #49b1f5; // 链接颜色保持一致
+$article-link-hover-color-dark: rgb(255, 126, 83); // 链接 hover 颜色保持一致
+
+// 字号和字重
+$article-font-size-base: 16px; // 基础字号
+$article-line-height-base: 1.5;
+
+$article-h1-font-size: 2.25em; // 36px when base is 16px
+$article-h1-font-weight: 700;
+$article-h2-font-size: 1.875em; // 30px when base is 16px
+$article-h2-font-weight: 700;
+$article-h3-font-size: 1.5em; // 24px when base is 16px
+$article-h3-font-weight: 700;
+
+$article-headline-font-size: 1.5em;
+$article-headline-span-font-size: 1.25em;
+
+// 其他颜色变量 (保持原有的，假设在主题scss中定义)
+// 这些颜色变量假设在你的主题 scss 文件中定义，这里只是引用
+$background-color-pre: #282c34;
+$blockquote-border-color: #49b1f5;
+$blockquote-background-color: var(--blockquote-bg); // 假设在主题scss中定义
+$blockquote-text-color: var(--blockquote-color); // 假设在主题scss中定义
+$light-grey-border: var(--light-grey); // 假设在主题scss中定义
+$block-lineNum-color: var(--block-lineNum-color); // 假设在主题scss中定义

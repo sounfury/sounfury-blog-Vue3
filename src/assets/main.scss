@@ -136,23 +136,7 @@ a {
   color: white;
   overflow: hidden;
 }
-.toolbar {
-  width: 100%;
-  position: relative;
-  background-color: rgb(28, 28, 28);
-  height: 2.5rem;
-  box-shadow: 0 4px 2px 0 rgba(0, 0, 0, 0.4);
-}
-.toolbar span {
-  opacity: 1 !important;
-  position: absolute;
-  left: 5.3rem !important;
-  top: 10px;
-  text-transform: uppercase;
-  font-weight: 700 !important;
-  font-size: 1.15em !important;
-  color: #eff !important;
-}
+
 
 #app {
 }
