@@ -19,6 +19,7 @@
   }
 
   p {
+    font-family: $article-font-family-base;
     margin: 0 0 8px;
     color: var(--font-color); // 仍然使用 var(--font-color)，主题 scss 控制
     line-height: 1.5; // 保持 p 的 line-height
@@ -68,7 +69,6 @@ blockquote {
   background-color: $blockquote-background-color;
   color: $blockquote-text-color;
 }
-
 
 table {
   display: table;
