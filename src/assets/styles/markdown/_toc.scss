@@ -4,7 +4,7 @@
   margin-top: 10px;
 }
 
-.doc_card {
+:deep().doc_card {
   padding: 10px 24px;
   position: sticky;
   z-index: 100;
@@ -20,93 +20,97 @@
   nav.toc {
     padding: 10px 0; // 内部 nav 增加一些内边距
   }
-}
 
-.headline {
-  color: var(--title-color); // 仍然使用 var(--title-color)，主题 scss 控制
-  font-size: $article-headline-font-size;
-
-  span {
-    font-size: $article-headline-span-font-size;
-    font-weight: 700;
+  .headline {
     color: var(--title-color); // 仍然使用 var(--title-color)，主题 scss 控制
+    font-size: $article-headline-font-size;
+
+    span {
+      font-size: $article-headline-span-font-size;
+      font-weight: 700;
+      color: var(--title-color); // 仍然使用 var(--title-color)，主题 scss 控制
+    }
   }
-}
 
-.itemClass {
-  padding: 6px 0 6px 10px; // 调整垂直和左侧内边距
-  margin-bottom: 2px; // item 之间增加少许间距
-  position: relative; /*  为了竖线定位 */
-}
-
-.linkClass {
-  color: var(--font-color); // 仍然使用 var(--font-color)，主题 scss 控制
-  display: block; // 使链接撑满 item
-  padding: 0 10px;
-  transition: background-color 0.3s ease, color 0.3s ease; // 平滑过渡，新增 color 的过渡
-
-  &:hover {
-    background-color: rgba(255, 255, 255, 0.1); // 鼠标悬停时 हल्का 背景 হাইলাইট
-    color: var(
-      --font_light-color
-    ); // 仍然使用 var(--font_light-color)，主题 scss 控制
-    transform: scale(1.02); // 稍微放大
-    transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease,
-      box-shadow 0.3s ease; // 确保所有属性都有平滑过渡
+  .itemClass {
+    padding: 6px 0 6px 10px; // 调整垂直和左侧内边距
+    margin-bottom: 2px; // item 之间增加少许间距
+    position: relative; /*  为了竖线定位 */
   }
-}
-
-.itemClass.active-toc-item {
-  position: relative;
 
   .linkClass {
-    background-color: rgba(255, 255, 255, 0.1);
-    color: var(--font_light-color);
-    transition: background-color 0.3s ease, color 0.3s ease;
+    color: var(--font-color); // 仍然使用 var(--font-color)，主题 scss 控制
+    display: block; // 使链接撑满 item
+    padding: 0 10px;
+    transition: background-color 0.3s ease, color 0.3s ease; // 平滑过渡，新增 color 的过渡
+
+    &:hover {
+      background-color: rgba(
+        255,
+        255,
+        255,
+        0.1
+      ); // 鼠标悬停时 हल्का 背景 হাইলাইট
+      color: var(
+        --font_light-color
+      ); // 仍然使用 var(--font_light-color)，主题 scss 控制
+      transform: scale(1.02); // 稍微放大
+      transition: background-color 0.3s ease, color 0.3s ease,
+        transform 0.3s ease, box-shadow 0.3s ease; // 确保所有属性都有平滑过渡
+    }
   }
 
-  /* 竖线动画 */
-  &::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 3px; /* 固定宽度 */
-    height: 0; /* 初始高度为0 */
-    background-color: var(--primary-color, #49b1f5);
-    border-radius: 0 4px 4px 0;
-    animation: expandHeight 0.3s ease-in-out forwards; /* 通过 animation 控制高度变化 */
-  }
+  .itemClass.active-toc-item {
+    position: relative;
 
-  /* 激活时的竖线动画 */
-  &.active-toc-item::before {
-    animation: expandHeight 0.3s ease-in-out forwards;
-  }
+    .linkClass {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: var(--font_light-color);
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
 
-  /* 定义高度扩展的动画 */
-  @keyframes expandHeight {
-    0% {
+    /* 竖线动画 */
+    &::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3px; /* 固定宽度 */
       height: 0; /* 初始高度为0 */
+      background-color: var(--primary-color, #49b1f5);
+      border-radius: 0 4px 4px 0;
+      animation: expandHeight 0.3s ease-in-out forwards; /* 通过 animation 控制高度变化 */
     }
-    100% {
-      height: 1em; /* 最终高度为1em */
+
+    /* 激活时的竖线动画 */
+    &.active-toc-item::before {
+      animation: expandHeight 0.3s ease-in-out forwards;
+    }
+
+    /* 定义高度扩展的动画 */
+    @keyframes expandHeight {
+      0% {
+        height: 0; /* 初始高度为0 */
+      }
+      100% {
+        height: 1em; /* 最终高度为1em */
+      }
     }
   }
-}
 
-.listClass .listClass {
-  margin-top: 2px; // 子列表顶部外边距
-  margin-left: 10px; // 子列表左侧缩进
-}
+  .listClass .listClass {
+    margin-top: 2px; // 子列表顶部外边距
+    margin-left: 10px; // 子列表左侧缩进
+  }
 
-.listClass .listClass .itemClass {
-  padding-left: 5px; // 子列表 item 减少左内边距，配合缩进
-}
+  .listClass .listClass .itemClass {
+    padding-left: 5px; // 子列表 item 减少左内边距，配合缩进
+  }
 
-.listClass .listClass .linkClass {
-  padding-left: 15px; // 子列表 link 调整内边距对齐
+  .listClass .listClass .linkClass {
+    padding-left: 15px; // 子列表 link 调整内边距对齐
+  }
 }
-
 
 /** 目录区域 **/

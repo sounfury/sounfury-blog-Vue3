@@ -1,9 +1,9 @@
 <template>
   <div class="article_page">
     <article-header v-bind="data" />
-    <div class="w-[90%] m-auto">
-      <div class="flex justify-center gap-12 p-8">
-        <card class="mark_body article w-3/4">
+    <div class="w-[95%] m-auto">
+      <div class="flex justify-center gap-12 p-8 flex-1">
+        <card class="mark_body article w-[99%]">
           <div ref="articleContent" v-html="result"></div>
         </card>
         <div class="aside_content">
@@ -81,13 +81,12 @@ onMounted(async () => {
   await fetchArticle(id);
   nextTick(() => {
     initIntersectionObserver();
+    copyCode()
   });
 })
 
 
 const initIntersectionObserver = () => {
-  console.log(articleContent.value);
-
   const headings = articleContent.value.querySelectorAll('h1[id], h2[id]'); // 只获取 h1 和 h2
   const tocLinks = docContainer.value.querySelectorAll('.doc nav.toc a.linkClass');
 
@@ -188,7 +187,6 @@ watch(
   (newData) => {
     if (newData.content) {
       result.value = MdToHtml(newData.content, document.querySelector(".doc"))
-      copyCode()
     }
   }
 )
@@ -205,5 +203,5 @@ watch(
 
 
 <style lang="scss" scoped>
-@import "@/assets/styles/markdown.scss"
+@import "@/assets/styles/markdown/index"
 </style>

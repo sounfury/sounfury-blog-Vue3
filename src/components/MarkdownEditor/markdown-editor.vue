@@ -1,5 +1,5 @@
 <template>
-    <div ref="editorContainer" class="min-h-[500px]"></div>
+    <div ref="editorContainer" class="minh-[500px]"></div>
 </template>
 
 <script setup>
@@ -19,99 +19,70 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['update:modelValue'])
-
 const editorContainer = ref(null)
 const vditorInstance = shallowRef(null)
+const isEditorReady = ref(false) // 新增编辑器就绪状态标识
 
 const initEditor = () => {
-    // Enhanced initialization check
-    if (!editorContainer.value) {
-        console.error('Editor container is not available')
-        return
-    }
+    if (!editorContainer.value) return
 
-    try {
-        const editor = new Vditor(editorContainer.value, {
-            height: 500,
-            width: '100%',
-            theme: 'classic',
-            mode: 'sv',
-            toolbar: [
-                'emoji', 'headings', 'bold', 'italic', 'strike', 'link',
-                'list', 'ordered-list', 'check', 'outdent', 'indent',
-                'quote', 'line', 'code', 'inline-code', 'insert-before',
-                'insert-after', 'table', 'undo', 'redo', 'fullscreen'
-            ],
-            cache: {
-                id: props.cacheId,
-                enable: true
-            },
-            input: (value) => {
-                emit('update:modelValue', value)
-            },
-            afterInit: () => {
-                // Set initial value only after full initialization
-                if (props.modelValue) {
-                    try {
-                        editor.setValue(props.modelValue)
-                    } catch (setError) {
-                        console.error('Error setting initial value:', setError)
-                    }
-                }
-            }
-        })
-
-        // Use shallowRef to store the instance
-        vditorInstance.value = editor
-    } catch (error) {
-        console.error('Vditor initialization failed:', error)
-    }
+    vditorInstance.value = new Vditor(editorContainer.value, {
+        height: 500,
+        width: '100%',
+        theme: 'classic',
+        mode: 'sv',
+        toolbar: [
+            'emoji', 'headings', 'bold', 'italic', 'strike', 'link',
+            'list', 'ordered-list', 'check', 'outdent', 'indent',
+            'quote', 'line', 'code', 'inline-code', 'insert-before',
+            'insert-after', 'table', 'undo', 'redo', 'fullscreen'
+        ],
+        cache: {
+            id: props.cacheId,
+            enable: true
+        },
+        input: (value) => {
+            emit('update:modelValue', value)
+        },
+        after: () => {
+            // 编辑器完全初始化后设置值，并更新就绪状态
+            vditorInstance.value.setValue(props.modelValue)
+            isEditorReady.value = true // 标记为已就绪
+        }
+    })
 }
 
-watch(() => props.modelValue, (newValue) => {
-    if (!vditorInstance.value) return
-    
-    console.log(vditorInstance.value);
-
-    try {
-        // Prevent unnecessary updates
-        const currentValue = vditorInstance.value.getValue()
-        if (newValue !== currentValue) {
-            vditorInstance.value.setValue(newValue)
+watch(
+    () => props.modelValue,
+    (newValue) => {
+        // 只有当编辑器实例已就绪且内容不同时才更新
+        if (isEditorReady.value && vditorInstance.value?.getValue() !== newValue) {
+            vditorInstance.value?.setValue(newValue)
         }
-    } catch (error) {
-        console.error('Error updating Vditor value:', error)
     }
-}, { immediate: true })
+)
 
 onMounted(() => {
-    // Ensure DOM is ready before initialization
     nextTick(initEditor)
 })
 
 onUnmounted(() => {
+    // 销毁前重置状态，避免内存泄漏
+    isEditorReady.value = false
     if (vditorInstance.value) {
-        try {
-            vditorInstance.value.destroy()
-        } catch (error) {
-            console.error('Error destroying Vditor:', error)
-        }
+        vditorInstance.value.destroy()
         vditorInstance.value = null
     }
 })
 
-// Safe method to get current editor value
 const getValue = () => {
-    return vditorInstance.value ? vditorInstance.value.getValue() : ''
+    return vditorInstance.value?.getValue() || ''
 }
 
-// Expose methods
-defineExpose({
-    getValue
-})
+defineExpose({ getValue })
 </script>
+
 <style scoped>
-/* 可选的样式 */
 .vditor {
     max-width: 100%;
     overflow: auto;

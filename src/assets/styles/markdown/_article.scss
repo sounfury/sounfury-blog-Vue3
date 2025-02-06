@@ -1,14 +1,11 @@
 /** 文章区域 **/
 @use "variables" as *;
 
-.article {
+:deep().article {
   font-family: $article-font-family-base;
   font-size: $article-font-size-base;
   line-height: $article-line-height-base;
 
-  * {
-    line-height: 1.3; //  保持原有 * 的样式，可能需要调整
-  }
 
   img {
     display: block;
@@ -23,6 +20,7 @@
     margin: 0 0 8px;
     color: var(--font-color); // 仍然使用 var(--font-color)，主题 scss 控制
     line-height: 1.5; // 保持 p 的 line-height
+
   }
 
   h1 {
@@ -60,38 +58,32 @@
   h3 {
     font-size: $article-h3-font-size;
   }
-}
 
-blockquote {
-  margin: 20px 0;
-  padding: 12px 15px;
-  border-left: 3px solid $blockquote-border-color;
-  background-color: $blockquote-background-color;
-  color: $blockquote-text-color;
-}
-
-table {
-  display: table;
-  width: 100%;
-  border-spacing: 0;
-  border-collapse: collapse;
-  empty-cells: show;
-  padding-bottom: 0;
-
-  td,
-  th {
-    padding: 6px 12px;
-    border: 1px solid $light-grey-border;
-    vertical-align: middle;
+  blockquote {
+    margin: 20px 0;
+    padding: 12px 15px;
+    border-left: 3px solid $blockquote-border-color;
+    background-color: $blockquote-background-color;
+    color: $blockquote-text-color;
   }
-}
 
-.hljs-copy-button {
-  top: 0.3em;
-}
+  table {
+    display: table;
+    width: 100%;
+    border-spacing: 0;
+    border-collapse: collapse;
+    empty-cells: show;
+    padding-bottom: 0;
 
-.article {
-  ul {
+    td,
+    th {
+      padding: 6px 12px;
+      border: 1px solid $light-grey-border;
+      vertical-align: middle;
+    }
+  }
+
+   ul {
     padding-left: 40px;
 
     li {
@@ -136,6 +128,10 @@ table {
       text-decoration: underline;
     }
   }
+}
+
+.hljs-copy-button {
+  top: 0.3em;
 }
 
 /** 文章区域 **/
