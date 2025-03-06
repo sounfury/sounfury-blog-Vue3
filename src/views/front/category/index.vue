@@ -16,18 +16,17 @@
       <card class="category_card p-6">
         <div class="space-y-6">
           <div v-for="(item, index) in articles" :key="item.id"
-            class="flex items-start space-x-6 p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
-            <router-link :to="'/article/' + item.id" class="w-48 h-32 overflow-hidden rounded-lg">
+            class="flex items-start space-x-6 p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 cursor-pointer"
+            @click="router.push('/article/' + item.id)">
+            <div class="w-48 h-32 overflow-hidden rounded-lg">
               <img :src="item.thumbnail"
                 class="w-full h-full object-cover transform hover:scale-110 transition-transform duration-200" alt="" />
-            </router-link>
+            </div>
 
             <div class="flex-1">
-              <router-link :to="'/article/' + item.id">
-                <h2 class="text-xl font-semibold mb-2 hover:text-blue-600 transition-colors duration-200">
-                  {{ item.title }}
-                </h2>
-              </router-link>
+              <h2 class="text-xl font-semibold mb-2 hover:text-blue-600 transition-colors duration-200">
+                {{ item.title }}
+              </h2>
               <p class="text-gray-600 line-clamp-2">{{ item.summary }}</p>
             </div>
 
@@ -52,6 +51,7 @@ import Pagination from "@/components/Pagination/index.vue"
 import TreeMenu from "./menu.vue"
 import { getCategoryById, getAllCategory } from "@/api/category"
 import useHeader from "@/store/modules/header"
+import { useRouter } from "vue-router"
 
 const articles = ref([])
 const categories = ref([])
@@ -69,6 +69,8 @@ const pageSize = ref(5)
 const page_num = ref(1)
 
 const isExpanded = ref(false)
+
+const router = useRouter()
 
 const handleCategorySelect = (category) => {
   selectedCategoryId.value = category.id

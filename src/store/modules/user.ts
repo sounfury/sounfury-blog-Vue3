@@ -6,6 +6,8 @@ import { defineStore } from "pinia"
 export interface LoginForm {
   username: string
   password: string
+  code: string
+  uuid: string
 }
 
 const useUserStore = defineStore("user", {
@@ -19,10 +21,8 @@ const useUserStore = defineStore("user", {
   actions: {
     // 登录
     login(userInfo: LoginForm) {
-      const username = userInfo.username.trim()
-      const password = userInfo.password
       return new Promise((resolve, reject) => {
-        login(username, password)
+        login(userInfo)
           .then((res: any) => {
             setToken(res.data.token)
             this.token = res.data.token

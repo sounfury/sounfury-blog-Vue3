@@ -21,6 +21,12 @@
                                         show-password class="flip-card__input"></el-input>
                                 </el-form-item>
 
+                                <el-form-item prop="code" class="captcha-container">
+                                    <el-input v-model="loginForm.code" placeholder="验证码" class="flip-card__input captcha-input"
+                                        style="width: 150px;" clearable></el-input>
+                                    <img :src="captchaImg" @click="refreshCaptcha" class="captcha-img" alt="验证码">
+                                </el-form-item>
+
                                 <el-button native-type="submit" class="flip-card__btn">
                                     确定
                                 </el-button>
@@ -64,8 +70,8 @@
 </template>
 
 <script setup>
-import { ref, reactive } from "vue"
-import { login, register } from "@/api/login"
+import { ref, reactive, onMounted, onUnmounted } from "vue"
+import { login, register,getCodeImg } from "@/api/login"
 import { ElMessage } from "element-plus"
 import useUserStore from "@/store/modules/user"
 
@@ -83,7 +89,9 @@ const userStore = useUserStore()
 // Login form and validation
 const loginForm = reactive({
     username: "",
-    password: ""
+    password: "",
+    code: "",
+    uuid: ""
 })
 // Login rules
 const loginRules = reactive({
@@ -109,6 +117,19 @@ const loginRules = reactive({
         {
             min: 8,
             message: "密码长度至少为8个字符",
+            trigger: 'blur'
+        }
+    ],
+    code: [
+        {
+            required: true,
+            message: "请输入验证码",
+            trigger: 'blur'
+        },
+        {
+            min: 4,
+            max: 4,
+            message: "验证码长度必须为4位",
             trigger: 'blur'
         }
     ]
@@ -180,6 +201,44 @@ const registerRules = reactive({
     ]
 })
 
+// 验证码相关
+const captchaImg = ref('')
+let refreshTimer = null
+
+// 获取验证码
+const getCaptcha = async () => {
+    try {
+        const res = await getCodeImg()
+        if (res.code === '200') {
+            captchaImg.value = 'data:image/jpeg;base64,' + res.data.img
+            loginForm.uuid = res.data.uuid
+        }
+    } catch (error) {
+        ElMessage.error('获取验证码失败')
+    }
+}
+
+// 刷新验证码
+const refreshCaptcha = () => {
+    getCaptcha()
+    loginForm.code = ''
+}
+
+// 组件挂载时获取验证码
+onMounted(() => {
+    getCaptcha()
+    // 60秒自动刷新验证码
+    refreshTimer = setInterval(() => {
+        getCaptcha()
+    }, 60000)
+})
+
+// 组件卸载时清除定时器
+onUnmounted(() => {
+    if (refreshTimer) {
+        clearInterval(refreshTimer)
+    }
+})
 
 const emit = defineEmits([]);
 
@@ -493,4 +552,22 @@ const registerHandler = async () => {
 :deep().el-input__inner:focus {
     border-color: var(--input-focus) !important;
 } */
+
+.captcha-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.captcha-input {
+    flex: 1;
+}
+
+.captcha-img {
+    height: 40px;
+    border-radius: 5px;
+    border: 2px solid var(--main-color);
+    box-shadow: 4px 4px var(--main-color);
+    cursor: pointer;
+}
 </style>

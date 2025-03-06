@@ -149,7 +149,7 @@ const saveCategory = async () => {
 
     if (isEditMode.value) {
         try {
-            await addCategory(currentCategory as Category);
+            await updateCategory(currentCategory as Category);
             ElMessage.success('分类更新成功');
             loadCategories(); // 直接重新加载全部数据
         } catch (error) {

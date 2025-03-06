@@ -65,7 +65,7 @@
                     <div class="mt-4 space-y-2">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div class="bg-gray-50 p-4 rounded">
-                                <p class="text-sm text-gray-600">上次更新时间：{{ systemSettings.updateTime }}</p>
+                                <p class="text-sm text-gray-600">上次更新时间：{{ systemSettings.updatedTime }}</p>
                             </div>
                         </div>
                     </div>
@@ -225,9 +225,16 @@ const fetchSettings = async () => {
 
         if (settingRes.success) {
             const settingsMap = {};
+            let updatedTime = '';
             settingRes.data.forEach(item => {
                 settingsMap[item.configKey] = item.configValue;
+                console.log(item);
+                if (item.updatedTime > updatedTime) {
+                    updatedTime = item.updatedTime;
+                }
             });
+            settingsMap['updatedTime'] = updatedTime;
+            console.log(settingsMap);
             systemSettings.value = settingsMap;
         }
 
