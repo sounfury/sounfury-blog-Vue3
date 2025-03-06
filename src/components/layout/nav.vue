@@ -83,30 +83,27 @@ const props = defineProps({
     type: Boolean,
     default: true
   },
-  showLogin: {
+  showLogin: {      //是否显示登录按钮
     type: Boolean,
     default: true
   },
-  showThemeToggle: {
+  showThemeToggle: {   //是否显示主题切换按钮
     type: Boolean,
     default: true
   },
-  showLoginDialog: {
-    type: Boolean,
-    default: true
-  },
-
   onSearchClick: {
     type: Function,
     default: () => { }
   }
 })
 
+
 // Emits
 const emit = defineEmits(['login', 'search'])
 
 
 const userStore = useUserStore()
+const showLoginDialog = ref(false)
 const isShow = ref(false)
 const isTop = ref(true)
 const dialogVisible = ref(false)
@@ -163,7 +160,7 @@ const openLoginDialog = () => {
         });
       });
     return;
-  } else if (props.showLoginDialog) {
+  } else if (showLoginDialog) {
     // 打开登录对话框
     dialogVisible.value = true;
     emit('login');
@@ -191,6 +188,17 @@ const handleScroll = () => {
 onMounted(() => {
   window.addEventListener("wheel", handleMouseWheel)
   window.addEventListener("scroll", handleScroll)
+  if (userStore.name !== '') {
+    console.log(userStore);
+    console.log(11111);
+    
+    showLoginDialog.value = false
+  } else {
+    console.log(22222);
+    
+    showLoginDialog.value = true
+  }
+
 })
 
 onUnmounted(() => {
