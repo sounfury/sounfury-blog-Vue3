@@ -2,68 +2,76 @@
     <el-dialog align-center id="login-dialog-114514">
         <div class="wrapper">
             <div class="card-switch">
-                <label class="switch">
-                    <input type="checkbox" class="toggle" v-model="isSignup">
-                    <span class="slider"></span>
-                    <span class="card-side"></span>
-                    <div class="flip-card__inner">
-                        <div class="flip-card__front">
-                            <div class="title">登陆</div>
-                            <el-form ref="loginFormRef" :model="loginForm" :rules="loginRules" class="flip-card__form"
-                                @submit.prevent="loginHandler">
-                                <el-form-item prop="username">
-                                    <el-input v-model="loginForm.username" placeholder="用户名" class="flip-card__input"
-                                        clearable></el-input>
-                                </el-form-item>
+                <div class="card-side"></div>
+                <div class="flip-card__inner" 
+                    ref="cardRef"
+                    @mousedown="startDrag"
+                    @mousemove="onDrag"
+                    @mouseup="endDrag"
+                    @mouseleave="endDrag"
+                    :style="{ transform: `rotateY(${rotation}deg)` }">
+                    <div class="flip-card__front">
+                        
+                        <div class="title">登录</div>
 
-                                <el-form-item prop="password">
-                                    <el-input v-model="loginForm.password" type="password" placeholder="密码"
-                                        show-password class="flip-card__input"></el-input>
-                                </el-form-item>
+                        <el-form ref="loginFormRef" :model="loginForm" :rules="loginRules" class="flip-card__form"
+                            @submit.prevent="loginHandler">
+                            <el-form-item prop="username">
+                                <el-input v-model="loginForm.username" placeholder="用户名" class="flip-card__input"
+                                    clearable></el-input>
+                            </el-form-item>
 
-                                <el-form-item prop="code" class="captcha-container">
+                            <el-form-item prop="password">
+                                <el-input v-model="loginForm.password" type="password" placeholder="密码"
+                                    show-password class="flip-card__input"></el-input>
+                            </el-form-item>
+
+                            <el-form-item prop="code" >
+                                <div class="captcha-container">
                                     <el-input v-model="loginForm.code" placeholder="验证码" class="flip-card__input captcha-input"
-                                        style="width: 150px;" clearable></el-input>
-                                    <img :src="captchaImg" @click="refreshCaptcha" class="captcha-img" alt="验证码">
-                                </el-form-item>
+                                    style="" clearable></el-input>
+                                <img :src="captchaImg" @click="refreshCaptcha" class="captcha-img" alt="验证码">
 
-                                <el-button native-type="submit" class="flip-card__btn">
-                                    确定
-                                </el-button>
-                            </el-form>
-                        </div>
 
-                        <div class="flip-card__back "v-if="allowRegister">
-                            <div class="title">注册</div>
-                            <el-form ref="registerFormRef" :model="registerForm" :rules="registerRules"
-                                class="flip-card__form" @submit.prevent="registerHandler">
-                                <el-form-item prop="name">
-                                    <el-input v-model="registerForm.name" placeholder="账号" class="flip-card__input"
-                                        clearable></el-input>
-                                </el-form-item>
+                                </div>
+                            </el-form-item>
 
-                                <el-form-item prop="mail">
-                                    <el-input v-model="registerForm.mail" placeholder="邮箱" type="email"
-                                        class="flip-card__input" clearable></el-input>
-                                </el-form-item>
-
-                                <el-form-item prop="password">
-                                    <el-input v-model="registerForm.password" type="password" placeholder="密码"
-                                        show-password class="flip-card__input"></el-input>
-                                </el-form-item>
-
-                                <el-form-item prop="confirmPassword">
-                                    <el-input v-model="registerForm.confirmPassword" type="password" placeholder="确认密码"
-                                        show-password class="flip-card__input"></el-input>
-                                </el-form-item>
-
-                                <el-button native-type="submit" class="flip-card__btn">
-                                    确定
-                                </el-button>
-                            </el-form>
-                        </div>
+                            <el-button native-type="submit" class="flip-card__btn">
+                                确定
+                            </el-button>
+                        </el-form>
                     </div>
-                </label>
+
+                    <div class="flip-card__back "v-if="allowRegister">
+                        <div class="title">注册</div>
+                        <el-form ref="registerFormRef" :model="registerForm" :rules="registerRules"
+                            class="flip-card__form" @submit.prevent="registerHandler">
+                            <el-form-item prop="name">
+                                <el-input v-model="registerForm.name" placeholder="账号" class="flip-card__input"
+                                    clearable></el-input>
+                            </el-form-item>
+
+                            <el-form-item prop="mail">
+                                <el-input v-model="registerForm.mail" placeholder="邮箱" type="email"
+                                    class="flip-card__input" clearable></el-input>
+                            </el-form-item>
+
+                            <el-form-item prop="password">
+                                <el-input v-model="registerForm.password" type="password" placeholder="密码"
+                                    show-password class="flip-card__input"></el-input>
+                            </el-form-item>
+
+                            <el-form-item prop="confirmPassword">
+                                <el-input v-model="registerForm.confirmPassword" type="password" placeholder="确认密码"
+                                    show-password class="flip-card__input"></el-input>
+                            </el-form-item>
+
+                            <el-button native-type="submit" class="flip-card__btn">
+                                确定
+                            </el-button>
+                        </el-form>
+                    </div>
+                </div>
             </div>
         </div>
     </el-dialog>
@@ -80,8 +88,11 @@ const loginFormRef = ref()
 const registerFormRef = ref()
 const allowRegister = ref(false)
 
-// Toggle between login and signup
-const isSignup = ref(false)
+// 移除 isSignup ref，改用 rotation
+const rotation = ref(0)
+const isDragging = ref(false)
+const startX = ref(0)
+const cardRef = ref(null)
 
 // User store
 const userStore = useUserStore()
@@ -127,9 +138,9 @@ const loginRules = reactive({
             trigger: 'blur'
         },
         {
-            min: 4,
-            max: 4,
-            message: "验证码长度必须为4位",
+            min: 1,
+            max: 40,
+            message: "验证码长度必须在1-4位之间",
             trigger: 'blur'
         }
     ]
@@ -285,8 +296,32 @@ const registerHandler = async () => {
     })
 }
 
+const startDrag = (e) => {
+    isDragging.value = true
+    startX.value = e.clientX
+}
 
+const onDrag = (e) => {
+    if (!isDragging.value) return
+    
+    const deltaX = e.clientX - startX.value
+    const newRotation = deltaX * 0.5 // 调整灵敏度
+    
+    // 限制旋转角度在0-180度之间
+    rotation.value = Math.max(0, Math.min(180, newRotation))
+}
 
+const endDrag = () => {
+    if (!isDragging.value) return
+    isDragging.value = false
+    
+    // 根据当前旋转角度决定是否完成翻转
+    if (rotation.value > 90) {
+        rotation.value = 180 // 完成翻转到注册面
+    } else {
+        rotation.value = 0 // 回到登录面
+    }
+}
 
 </script>
 
@@ -320,97 +355,16 @@ const registerHandler = async () => {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100%;
-}
 
+}
 /* switch card */
-.switch {
-    transform: translateY(-300px);
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 30px;
-    width: 50px;
-    height: 20px;
-}
-
 .card-side::before {
-    position: absolute;
-    content: 'Log in';
-    left: -70px;
-    top: 0;
-    width: 100px;
-    text-decoration: underline;
-    color: var(--font-color);
-    font-weight: 600;
+    display: none;
 }
 
 .card-side::after {
-    position: absolute;
-    content: 'Sign up';
-    left: 70px;
-    top: 0;
-    width: 100px;
-    text-decoration: none;
-    color: var(--font-color);
-    font-weight: 600;
+    display: none;
 }
-
-.toggle {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-.slider {
-    box-sizing: border-box;
-    border-radius: 5px;
-    border: 2px solid var(--main-color);
-    box-shadow: 4px 4px var(--main-color);
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: var(--bg-colorcolor);
-    transition: 0.3s;
-}
-
-.slider:before {
-    box-sizing: border-box;
-    position: absolute;
-    content: "";
-    height: 20px;
-    width: 20px;
-    border: 2px solid var(--main-color);
-    border-radius: 5px;
-    left: -2px;
-    bottom: 2px;
-    background-color: var(--bg-color);
-    box-shadow: 0 3px 0 var(--main-color);
-    transition: 0.3s;
-}
-
-.toggle:checked+.slider {
-    background-color: var(--input-focus);
-}
-
-.toggle:checked+.slider:before {
-    transform: translateX(30px);
-}
-
-.toggle:checked~.card-side:before {
-    text-decoration: none;
-}
-
-.toggle:checked~.card-side:after {
-    text-decoration: underline;
-}
-
-/* card */
 
 .flip-card__inner {
     width: 300px;
@@ -418,19 +372,10 @@ const registerHandler = async () => {
     position: relative;
     background-color: transparent;
     perspective: 1000px;
-    /* width: 100%;
-    height: 100%; */
     text-align: center;
-    transition: transform 0.8s;
+    transition: transform 0.3s ease;
     transform-style: preserve-3d;
-}
-
-.toggle:checked~.flip-card__inner {
-    transform: rotateY(180deg);
-}
-
-.toggle:checked~.flip-card__front {
-    box-shadow: none;
+    cursor: grab;
 }
 
 .flip-card__front,
@@ -440,6 +385,7 @@ const registerHandler = async () => {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
     background: lightgrey;
@@ -447,6 +393,7 @@ const registerHandler = async () => {
     border-radius: 5px;
     border: 2px solid var(--main-color);
     box-shadow: 4px 4px var(--main-color);
+    height: 100%;
 }
 
 .flip-card__back {
@@ -462,7 +409,7 @@ const registerHandler = async () => {
 }
 
 .title {
-    margin: 20px 0 20px 0;
+    margin-top: 40px;
     font-size: 25px;
     font-weight: 900;
     text-align: center;
@@ -555,12 +502,11 @@ const registerHandler = async () => {
 
 .captcha-container {
     display: flex;
-    align-items: center;
-    gap: 10px;
+    gap: 20px;
 }
 
 .captcha-input {
-    flex: 1;
+  width: 50%;
 }
 
 .captcha-img {
@@ -569,5 +515,6 @@ const registerHandler = async () => {
     border: 2px solid var(--main-color);
     box-shadow: 4px 4px var(--main-color);
     cursor: pointer;
+    width: 40%;
 }
 </style>

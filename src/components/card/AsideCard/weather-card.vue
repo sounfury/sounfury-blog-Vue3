@@ -58,7 +58,9 @@ const showWeather = async () => {
     await getposition()
     getWeather()
   } catch (error) {
-    // 处理错误
+    console.error("获取天气信息失败:", error)
+    // 设置默认值或错误状态
+    position.city = "获取位置失败"
   }
 }
 
