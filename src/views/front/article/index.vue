@@ -1,9 +1,9 @@
 <template>
-  <div class="article_page">
+  <div class="article_page ">
     <article-header v-bind="data" />
     <div class="w-[95%] m-auto">
-      <div class="flex justify-center gap-12 p-8 flex-1">
-        <card class="mark_body article w-[99%]">
+      <div class="flex justify-center gap-12 p-8 ">
+        <card class="mark_body article w-[70%]">
           <div ref="articleContent" v-html="result"></div>
         </card>
         <div class="aside_content">
