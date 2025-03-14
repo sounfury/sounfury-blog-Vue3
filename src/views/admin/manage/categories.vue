@@ -147,25 +147,28 @@ const saveCategory = async () => {
         return;
     }
 
-    if (isEditMode.value) {
-        try {
+    try {
+        // 判断当前操作类型
+        const isAddingChildCategory = isEditMode.value && dialogTitle.value === '新增子分类';
+        const isEditingCategory = isEditMode.value && dialogTitle.value === '编辑分类';
+        const isAddingRootCategory = !isEditMode.value;
+
+        if (isEditingCategory) {
+            // 编辑现有分类
             await updateCategory(currentCategory as Category);
             ElMessage.success('分类更新成功');
-            loadCategories(); // 直接重新加载全部数据
-        } catch (error) {
-            ElMessage.error(`更新分类失败：${error}`);
-        }
-    } else {
-        try {
-            const newCategory = await addCategory(currentCategory as Category);
+        } else {
+            // 新增分类（包括子分类和顶级分类）
+            await addCategory(currentCategory as Category);
             ElMessage.success('分类新增成功');
-
-            // 直接重新加载全部数据，确保排序正确
-            loadCategories();
-        } catch (error) {
-            ElMessage.error(`新增分类失败：${error}`);
         }
+        
+        // 重新加载分类数据
+        loadCategories();
+    } catch (error) {
+        ElMessage.error(`操作失败：${error}`);
     }
+    
     dialogVisible.value = false;
 };
 
