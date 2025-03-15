@@ -41,7 +41,7 @@ const AboutUser = reactive({
   article_num: ref(0),
   tag_num: ref(0),
   category_num: ref(0),
-  website: ref("https://sounfury.github.io/"),
+  website: ref("https://sounfury.top/"),
 })
 
 onMounted(() => {
