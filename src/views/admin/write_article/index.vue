@@ -197,9 +197,8 @@ const removeTag = (tag) => {
 }
 
 // 上传相关方法
-const handleUploadSuccess = (response) => {
-    console.log(response);
-    articleForm.value.thumbnail = response.data.url
+const handleUploadSuccess = (url) => {
+    articleForm.value.thumbnail = url
     ElMessage.success('上传成功')
 }
 
@@ -264,8 +263,6 @@ const initAnimation = () => {
 onMounted(async () => {
     await initData()
     initAnimation()
-
-
 })
 </script>
 

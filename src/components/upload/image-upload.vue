@@ -157,13 +157,13 @@ const handleFileUpload = async (event) => {
         })
 
         uploadedFiles.value = [file]
-        emit('update:modelValue', response.data)
         emit('upload-success', response.data.data.url)
 
         // 触发上传成功动画
         startSuccessAnimation()
     } catch (error) {
         emit('upload-error', error)
+        throw error
         errorMessage.value = '上传失败'
     }
 }
