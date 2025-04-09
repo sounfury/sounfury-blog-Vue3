@@ -228,10 +228,26 @@ const submitForm = async () => {
     }
     // 获取编辑器最新内容
     articleForm.value.content = markdownEditorRef.value.getValue();
-    articleForm.value.createTime = 
-    articleForm.value.createTime instanceof Date && !isNaN(articleForm.value.createTime.getTime())
-        ? articleForm.value.createTime.toISOString().replace('T', ' ').split('.')[0]
-        : new Date(articleForm.value.createTime).toISOString().replace('T', ' ').split('.')[0]; const submitFunc = isEdit.value ? updateArticle : addArticle;
+    
+    // 处理日期时间，避免时区问题
+    let dateObj;
+    if (articleForm.value.createTime instanceof Date && !isNaN(articleForm.value.createTime.getTime())) {
+        dateObj = articleForm.value.createTime;
+    } else {
+        dateObj = new Date(articleForm.value.createTime);
+    }
+    
+    // 格式化日期时间，保持本地时间
+    const year = dateObj.getFullYear();
+    const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+    const day = String(dateObj.getDate()).padStart(2, '0');
+    const hours = String(dateObj.getHours()).padStart(2, '0');
+    const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+    const seconds = String(dateObj.getSeconds()).padStart(2, '0');
+    
+    articleForm.value.createTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    
+    const submitFunc = isEdit.value ? updateArticle : addArticle;
     const params = isEdit.value ?
         { ...articleForm.value, id: route.query.id } :
         articleForm.value;
