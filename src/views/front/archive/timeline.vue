@@ -76,6 +76,7 @@ const pageQuery = ref({
   size: 10,
   historyTime: null,
   accuracy: null,
+  "sortBy[create_time]": "DESC"
 })
 const total = ref(0) // 总条数
 const items = reactive([

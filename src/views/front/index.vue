@@ -133,7 +133,6 @@ const themeStore = useTheme()
 async function fetchSettings() {
   try {
     await settingStore.getSettings();
-    console.log("Settings fetched successfully:", settingStore.settings);
   } catch (error) {
     console.error("Failed to fetch settings:", error);
   }

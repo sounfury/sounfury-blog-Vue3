@@ -104,7 +104,7 @@ const loginForm = reactive({
     code: "",
     uuid: ""
 })
-// Login rules
+// 登录规则
 const loginRules = reactive({
     username: [
         {

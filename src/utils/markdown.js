@@ -6,7 +6,6 @@ import CopyButtonPlugin from "highlightjs-copy"
 
 export function copyCode() {
   const copy = document.querySelectorAll(".copy")
-  console.log(copy)
   copy.forEach((item) => {
     item.addEventListener("click", () => {
       const text = item.previousElementSibling.innerText
@@ -16,7 +15,6 @@ export function copyCode() {
       textarea.select()
       document.execCommand("copy")
       document.body.removeChild(textarea)
-      console.log("copyCode")
 
       const successMessage = document.createElement("div")
       successMessage.classList.add("copy-success")
@@ -32,7 +30,6 @@ export function copyCode() {
 }
 
 export function MdToHtml(content, doc_dom) {
-    console.log(doc_dom);
   const md = new MarkdownIt({
     html: true,
     linkify: true,
@@ -122,7 +119,9 @@ export function MdToHtml(content, doc_dom) {
       itemClass: "itemClass",
       linkClass: "linkClass",
       callback: function (html) {
-        doc_dom.innerHTML = html
+        if (doc_dom) {
+          doc_dom.innerHTML = html
+        }
       },
     })
 

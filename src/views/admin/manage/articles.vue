@@ -115,7 +115,9 @@ const fetchArticles = async () => {
         const res = await getArticlePage({
             page: page.value,
             size: pageSize.value,
-            params: {}
+            sortBy: {
+                "create_time": "DESC"
+            }
         })
         articles.value = res.data.data
         total.value = res.data.total

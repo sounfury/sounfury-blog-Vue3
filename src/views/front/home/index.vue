@@ -29,7 +29,9 @@ const total = ref(0) // 总条数
 const pageQuery = ref({
   page: 1, // 第1页
   size: 5, // 每页10条数据
-  "sortBy[create_time]": "DESC"
+  sortBy: {
+    "create_time": "DESC"
+  }
 })
 
 const articles = ref([]) // 文章列表

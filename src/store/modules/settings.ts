@@ -59,8 +59,7 @@ const useSettings = defineStore("settings", {
     },
 
     async getSettings() {
-      // 如果已经初始化过且缓存未过期，直接返回
-      console.log(this.isInitialized, this.isCacheValid())
+
 
       if (this.isInitialized && this.isCacheValid()) {
         return Promise.resolve()

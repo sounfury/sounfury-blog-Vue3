@@ -70,8 +70,6 @@ const useTheme = defineStore("theme", {
           "--image-url",
           imageUrl ? `url(${imageUrl})` : "null"
         )
-
-        console.log(`设置${mode === 0 ? "日间" : "夜间"}模式背景图`, imageUrl)
       }
     },
 

@@ -1,11 +1,10 @@
 import request from "@/utils/request"
 const portalRouter = "/portal/article"
 const adminRouter = "/admin/article"
-export type RequestPageType<T> = T & {
-  page: number
-  size: number
-  params: { [key: string]: string }
-}
+
+import type { RequestPageType } from "@/types/request"
+
+
 
 /**
  * 前台单个文章详情

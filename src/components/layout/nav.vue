@@ -189,12 +189,9 @@ onMounted(() => {
   window.addEventListener("wheel", handleMouseWheel)
   window.addEventListener("scroll", handleScroll)
   if (userStore.name !== '') {
-    console.log(userStore);
-    console.log(11111);
     
     showLoginDialog.value = false
   } else {
-    console.log(22222);
     
     showLoginDialog.value = true
   }

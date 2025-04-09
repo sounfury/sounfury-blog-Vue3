@@ -2,11 +2,11 @@
   <div class="article_page ">
     <article-header v-bind="data" />
     <div class="w-[95%] m-auto">
-      <div class="flex justify-center gap-12 p-8 ">
-        <card class="mark_body article w-[70%]">
+      <div class="flex justify-center gap-12 p-8" :class="{'article-no-toc': !hasToc}">
+        <card class="mark_body article" :class="{'w-[70%]': hasToc, 'w-[85%]': !hasToc}">
           <div ref="articleContent" v-html="result"></div>
         </card>
-        <div class="aside_content">
+        <div class="aside_content" v-show="hasToc">
           <Card class="doc_card">
             <div class="headline">
               <font-awesome-icon :icon="['fas', 'bars']" />
@@ -44,6 +44,7 @@ const meta = reactive({
 
 const docContainer = ref(null); // 用于获取 .doc 容器
 const articleContent = ref(null); // 用于获取 .article 内容容器
+const hasToc = ref(false); // 用于判断是否有目录
 
 
 async function fetchArticle(id) {
@@ -76,19 +77,37 @@ function updateMeta() {
   data.value.meta = meta
 }
 
-onMounted(async () => {
-  const id = router.currentRoute.value.params.id
-  await fetchArticle(id);
+function renderMarkdownAndCheckToc() {
+  if (!content.value) return;
+  
+  // 先渲染Markdown内容
+  result.value = MdToHtml(content.value, docContainer.value);
+  
+  // 在内容渲染后检查目录是否有内容
   nextTick(() => {
-    initIntersectionObserver();
-    copyCode()
+    const tocElement = docContainer.value?.querySelector('nav.toc');
+    hasToc.value = tocElement && tocElement.children.length > 0;
+    
+    copyCode();
+    if (hasToc.value) {
+      initIntersectionObserver();
+    }
   });
+}
+
+onMounted(async () => {
+  const id = router.currentRoute.value.params.id;
+  await fetchArticle(id);
+  nextTick(renderMarkdownAndCheckToc);
 })
 
 
 const initIntersectionObserver = () => {
+  // 如果没有目录容器，直接返回
+  if (!docContainer.value) return;
+  
   const headings = articleContent.value.querySelectorAll('h1[id], h2[id]'); // 只获取 h1 和 h2
-  const tocLinks = docContainer.value.querySelectorAll('.doc nav.toc a.linkClass');
+  const tocLinks = docContainer.value.querySelectorAll('nav.toc a.linkClass');
 
   if (!headings.length || !tocLinks.length) {
     return;
@@ -170,6 +189,9 @@ const initIntersectionObserver = () => {
 };
 
 const updateTocLinks = (activeId, tocLinks) => {
+  // 如果没有目录链接，直接返回
+  if (!tocLinks || !tocLinks.length) return;
+  
   tocLinks.forEach(link => {
     const linkHref = link.getAttribute('href').substring(1);
     const listItem = link.closest('.itemClass');
@@ -183,10 +205,11 @@ const updateTocLinks = (activeId, tocLinks) => {
 };
 
 watch(
-  () => data.value,
-  (newData) => {
-    if (newData.content) {
-      result.value = MdToHtml(newData.content, document.querySelector(".doc"))
+  () => data.value.content,
+  (newContent) => {
+    if (newContent) {
+      content.value = newContent;
+      renderMarkdownAndCheckToc();
     }
   }
 )
@@ -197,6 +220,10 @@ watch(
 <style scoped>
 .mark_body {
   padding: 50px 40px;
+}
+
+.article-no-toc {
+  justify-content: center;
 }
 </style>
 

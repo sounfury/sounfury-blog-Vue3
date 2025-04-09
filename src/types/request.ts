@@ -17,6 +17,12 @@ export type RequestConfig = {
     }
 }
 
+export type RequestPageType<T> = T & {
+    page: number
+    size: number
+    sortBy?: Record<string, 'ASC' | 'DESC'> // 增加 sortBy 字段
+  }
+
 export interface RequestInstance extends AxiosInstance {
     (config: RequestConfig): AxiosPromise
 }

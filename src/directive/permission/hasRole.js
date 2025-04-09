@@ -12,8 +12,6 @@ export default {
       
     const roles = useUserStore().roles
     
-    console.log("你好我是");
-
     if (value && value instanceof Array && value.length > 0) {
       const roleFlag = value
       const hasRole = roles.some(role => {
