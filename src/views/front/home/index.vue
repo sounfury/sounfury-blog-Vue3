@@ -24,6 +24,7 @@ import asideCards from "@/components/card/MainCard/aside-cards.vue"
 import LoadingService from "@/plugins/loading";
 import { ref, onMounted, watch, reactive } from "vue"
 import { getArticleList } from "@/api/article"
+import { smoothScrollToTop } from "@/utils/commonUtils"
 
 const total = ref(0) // 总条数
 const pageQuery = ref({
@@ -42,8 +43,14 @@ const handlePageChange = async (pageNum) => {
   pageQuery.value.page = pageNum
   await fetchArticles() // 重新请求数据
   // 平滑滚动到顶部
-  window.scrollTo({ top: 0, behavior: "smooth" })
+
+  smoothScrollToTop()
+
 }
+
+
+
+
 
 // 请求文章列表数据
 const fetchArticles = async () => {

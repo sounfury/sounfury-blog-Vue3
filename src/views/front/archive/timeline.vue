@@ -36,10 +36,11 @@
 
 <script setup>
 import { ref, reactive } from "vue"
-import { onMounted } from "vue"
+import { onMounted, nextTick } from "vue"
 import Footer from "@/components/layout/footer.vue"
 import { useRouter } from "vue-router"
 import Pagination from "@/components/Pagination/index.vue"
+import { smoothScrollToTop } from "@/utils/commonUtils"
 
 const activeClass = "item--active"
 
@@ -73,15 +74,24 @@ import { getHistoryList } from "@/api/history"
 
 const pageQuery = ref({
   page: 1,
-  size: 10,
+  size: 5,
   historyTime: null,
   accuracy: null,
   "sortBy[create_time]": "DESC"
 })
 const total = ref(0) // 总条数
-const items = reactive([
-  // 添加更多项目
-])
+const items = reactive([])
+const handlePageChange = async (pageNum) => {
+
+  pageQuery.value.page = pageNum
+  await fetchData() // 重新请求数据
+  // 使用nextTick确保DOM更新后再滚动
+  nextTick(() => {
+    smoothScrollToTop()
+  })
+}
+
+
 
 
 const fetchData = async () => {
@@ -89,6 +99,7 @@ const fetchData = async () => {
     const response = await getHistoryList(pageQuery.value)
     if (response.success && response.code === "200") {
       total.value = response.data.total
+      
 
       items.length = 0
       response.data.data.forEach(item => {

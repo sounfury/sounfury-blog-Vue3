@@ -250,3 +250,35 @@ export async function blobValidate(data) {
     return true;
   }
 }
+
+
+/**
+ * 平滑滚动到顶部（模拟 window.scrollTo({ top: 0, behavior: "smooth" })）
+ * @param {number} duration 滚动持续时间，默认 500ms
+ */
+export function smoothScrollToTop(duration = 500) {
+  // 获取当前滚动容器（兼容性处理）
+  const element = document.scrollingElement || document.documentElement || document.body;
+
+  const start = element.scrollTop; // 当前滚动位置
+  const change = -start; // 滚动目标为 0，因此变化量是负数
+  const startTime = performance.now(); // 动画开始时间
+
+  // 使用 easeInOutCubic 缓动函数，过渡自然
+  const easeInOutCubic = (t) => {
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  };
+
+  const animateScroll = (currentTime) => {
+    const elapsed = currentTime - startTime; // 已经过去的时间
+    const progress = Math.min(elapsed / duration, 1); // 归一化进度 [0, 1]
+    const easedProgress = easeInOutCubic(progress); // 缓动后的进度
+    element.scrollTop = start + change * easedProgress; // 当前滚动位置
+
+    if (progress < 1) {
+      requestAnimationFrame(animateScroll); // 继续下一帧
+    }
+  };
+
+  requestAnimationFrame(animateScroll); // 启动动画
+};
