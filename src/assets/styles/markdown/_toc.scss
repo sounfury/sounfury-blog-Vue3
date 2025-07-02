@@ -1,116 +1,224 @@
 /** 目录区域 **/
 @use "variables" as *;
-.doc {
-  margin-top: 10px;
-}
 
-:deep().doc_card {
-  padding: 10px 24px;
-  position: sticky;
-  z-index: 100;
-  top: 20px;
 
-  // Glassmorphism Card Style for doc_card (目录卡片容器)
-  background-color: rgba(255, 255, 255, 0.2); // 半透明白色背景
-  backdrop-filter: blur(10px); // 背景模糊
-  border-radius: 15px;
-  border: 1px solid rgba(255, 255, 255, 0.3); //  হালকা সাদা বর্ডার
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05); //  হালকা শ্যাডো, অপশনাল
+/* PC目录样式 */
+@mixin pc-toc-styles {
+  .doc_card {
+    padding: 10px 24px;
+    position: sticky;
+    z-index: 100;
+    top: 20px;
 
-  nav.toc {
-    padding: 10px 0; // 内部 nav 增加一些内边距
-  }
+    // Glassmorphism Card Style for doc_card (目录卡片容器)
+    background-color: rgba(255, 255, 255, 0.2); // 半透明白色背景
+    backdrop-filter: blur(10px); // 背景模糊
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.3); //  হালকা সাদা বর্ডার
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05); //  হালকা শ্যাডো, অপশনাল
 
-  .headline {
-    color: var(--title-color); // 仍然使用 var(--title-color)，主题 scss 控制
-    font-size: $article-headline-font-size;
+    nav.toc {
+      padding: 10px 0; // 内部 nav 增加一些内边距
+    }
 
-    span {
-      font-size: $article-headline-span-font-size;
-      font-weight: 700;
+    .headline {
       color: var(--title-color); // 仍然使用 var(--title-color)，主题 scss 控制
+      font-size: $article-headline-font-size;
+
+      span {
+        font-size: $article-headline-span-font-size;
+        font-weight: 700;
+        color: var(--title-color); // 仍然使用 var(--title-color)，主题 scss 控制
+      }
     }
-  }
 
-  .itemClass {
-    padding: 6px 0 6px 10px; // 调整垂直和左侧内边距
-    margin-bottom: 2px; // item 之间增加少许间距
-    position: relative; /*  为了竖线定位 */
-  }
-
-  .linkClass {
-    color: var(--font-color); // 仍然使用 var(--font-color)，主题 scss 控制
-    display: block; // 使链接撑满 item
-    padding: 0 10px;
-    transition: background-color 0.3s ease, color 0.3s ease; // 平滑过渡，新增 color 的过渡
-
-    &:hover {
-      background-color: rgba(
-        255,
-        255,
-        255,
-        0.1
-      ); // 鼠标悬停时 हल्का 背景 হাইলাইট
-      color: var(
-        --font_light-color
-      ); // 仍然使用 var(--font_light-color)，主题 scss 控制
-      transform: scale(1.02); // 稍微放大
-      transition: background-color 0.3s ease, color 0.3s ease,
-        transform 0.3s ease, box-shadow 0.3s ease; // 确保所有属性都有平滑过渡
+    .itemClass {
+      padding: 6px 0 6px 10px; // 调整垂直和左侧内边距
+      margin-bottom: 2px; // item 之间增加少许间距
+      position: relative;
+      /*  为了竖线定位 */
     }
-  }
-
-  .itemClass.active-toc-item {
-    position: relative;
 
     .linkClass {
-      background-color: rgba(255, 255, 255, 0.1);
-      color: var(--font_light-color);
-      transition: background-color 0.3s ease, color 0.3s ease;
-    }
+      color: var(--font-color); // 仍然使用 var(--font-color)，主题 scss 控制
+      display: block; // 使链接撑满 item
+      padding: 0 10px;
+      transition: background-color 0.3s ease, color 0.3s ease; // 平滑过渡，新增 color 的过渡
 
-    /* 竖线动画 */
-    &::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 3px; /* 固定宽度 */
-      height: 0; /* 初始高度为0 */
-      background-color: var(--primary-color, #49b1f5);
-      border-radius: 0 4px 4px 0;
-      animation: expandHeight 0.3s ease-in-out forwards; /* 通过 animation 控制高度变化 */
-    }
-
-    /* 激活时的竖线动画 */
-    &.active-toc-item::before {
-      animation: expandHeight 0.3s ease-in-out forwards;
-    }
-
-    /* 定义高度扩展的动画 */
-    @keyframes expandHeight {
-      0% {
-        height: 0; /* 初始高度为0 */
-      }
-      100% {
-        height: 1em; /* 最终高度为1em */
+      &:hover {
+        background-color: rgba(255,
+            255,
+            255,
+            0.1); // 鼠标悬停时 हल्का 背景 হাইলাইট
+        color: var(--font_light-color); // 仍然使用 var(--font_light-color)，主题 scss 控制
+        transform: scale(1.02); // 稍微放大
+        transition: background-color 0.3s ease, color 0.3s ease,
+          transform 0.3s ease, box-shadow 0.3s ease; // 确保所有属性都有平滑过渡
       }
     }
-  }
 
-  .listClass .listClass {
-    margin-top: 2px; // 子列表顶部外边距
-    margin-left: 10px; // 子列表左侧缩进
-  }
+    .itemClass.active-toc-item {
+      position: relative;
 
-  .listClass .listClass .itemClass {
-    padding-left: 5px; // 子列表 item 减少左内边距，配合缩进
-  }
+      .linkClass {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: var(--font_light-color);
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
 
-  .listClass .listClass .linkClass {
-    padding-left: 15px; // 子列表 link 调整内边距对齐
+      /* 竖线动画 */
+      &::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 3px;
+        /* 固定宽度 */
+        height: 0;
+        /* 初始高度为0 */
+        background-color: var(--primary-color, #49b1f5);
+        border-radius: 0 4px 4px 0;
+        animation: expandHeight 0.3s ease-in-out forwards;
+        /* 通过 animation 控制高度变化 */
+      }
+
+      /* 激活时的竖线动画 */
+      &.active-toc-item::before {
+        animation: expandHeight 0.3s ease-in-out forwards;
+      }
+
+      /* 定义高度扩展的动画 */
+      @keyframes expandHeight {
+        0% {
+          height: 0;
+          /* 初始高度为0 */
+        }
+
+        100% {
+          height: 1em;
+          /* 最终高度为1em */
+        }
+      }
+    }
+
+    .listClass .listClass {
+      margin-top: 2px; // 子列表顶部外边距
+      margin-left: 10px; // 子列表左侧缩进
+    }
+
+    .listClass .listClass .itemClass {
+      padding-left: 5px; // 子列表 item 减少左内边距，配合缩进
+    }
+
+    .listClass .listClass .linkClass {
+      padding-left: 15px; // 子列表 link 调整内边距对齐
+    }
+
   }
 }
 
-/** 目录区域 **/
+@mixin mobile-toc-styles {
+ /* 移动端浮动目录样式 */
+.mobile-toc-container {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.mobile-toc-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--hover--color);
+  color: white;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  transition: all 0.3s ease;
+}
+
+.mobile-toc-btn:hover,
+.mobile-toc-btn.active {
+  background: var(--text-hover);
+  transform: scale(1.1);
+}
+
+.mobile-toc-panel {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--card_background_color);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-bottom: none;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+  max-height: 60vh;
+  overflow: hidden;
+}
+.mobile-toc-panel.open {
+  transform: translateY(0);
+}
+
+.mobile-doc {
+  padding: 15px 20px;
+  max-height: calc(60vh - 60px);
+  overflow-y: auto;
+  border-radius: 2px;
+}
+
+.mobile-toc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  font-weight: bold;
+}
+
+.mobile-toc-header button {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: var(--font-color);
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+.mobile-toc-header button:hover {
+  opacity: 1;
+}
+
+/* 滚动条样式优化 */
+.mobile-doc::-webkit-scrollbar {
+  width: 4px;
+}
+
+.mobile-doc::-webkit-scrollbar-track {
+   background: var(--card_background_color);
+  border-radius: 2px;
+  backdrop-filter: blur(10px);
+}
+
+.mobile-doc::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+}
+
+.mobile-doc::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+}
+

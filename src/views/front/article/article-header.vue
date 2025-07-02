@@ -63,6 +63,7 @@ header {
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    position: relative;
 
     .title {
         margin-bottom: 8px;
@@ -72,6 +73,8 @@ header {
         line-height: 1.5;
         -webkit-line-clamp: 3;
         z-index: 1;
+        text-align: center;
+        padding: 0 20px;
     }
 
     & span {
@@ -85,7 +88,7 @@ header::before {
     top: 0;
     left: 0;
     width: 100%;
-    height: 400px;
+    height: 100%;
     background: rgba(0, 0, 0, 0.5);
     z-index: 0;
 }
@@ -107,5 +110,66 @@ header::before {
 
 .meta-separator {
     margin-right: 10px;
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    header {
+        height: 250px;
+        min-height: 250px;
+
+        .title {
+            font-size: 1.8em;
+            margin-bottom: 12px;
+            padding: 0 15px;
+        }
+    }
+
+    .meta {
+        font-size: 85%;
+        padding: 0 15px;
+
+        .metaline {
+            margin: 0.3em 0;
+
+            & span {
+                margin-left: 6px;
+            }
+        }
+
+        /* 移动端隐藏部分元信息 */
+        .metaline:nth-child(2) {
+            display: none;
+        }
+    }
+
+    .meta-separator {
+        margin-right: 6px;
+    }
+}
+
+@media (max-width: 480px) {
+    header {
+        height: 200px;
+        min-height: 200px;
+
+        .title {
+            font-size: 1.5em;
+            line-height: 1.3;
+        }
+    }
+
+    .meta {
+        font-size: 80%;
+
+        .metaline {
+            flex-wrap: wrap;
+            justify-content: center;
+
+            & span {
+                margin-left: 4px;
+            }
+        }
+    }
 }
 </style>

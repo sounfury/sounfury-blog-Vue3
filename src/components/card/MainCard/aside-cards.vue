@@ -37,4 +37,17 @@ const cardComponents = {
     padding: 20px;
     width: 100%;
 }
+
+/* 移动端适配 */
+@media (max-width: 1024px) {
+    .aside_card {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    .aside_card {
+        padding: 12px;
+    }
+}
 </style>

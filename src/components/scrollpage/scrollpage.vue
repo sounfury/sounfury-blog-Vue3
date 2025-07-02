@@ -166,4 +166,11 @@ onMounted(() => {
     opacity: 0.3;
   }
 }
+
+/* 移动端隐藏大图 */
+@media (max-width: 768px) {
+  .full_page {
+    display: none;
+  }
+}
 </style>

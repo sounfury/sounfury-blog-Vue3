@@ -1,12 +1,14 @@
 <template>
   <div class="article_page ">
     <article-header v-bind="data" />
-    <div class="w-[95%] m-auto">
-      <div class="flex justify-center gap-12 p-8" :class="{'article-no-toc': !hasToc}">
-        <card class="mark_body article" :class="{'w-[70%]': hasToc, 'w-[85%]': !hasToc}">
+    <div class="w-full lg:w-[95%] lg:m-auto">
+      <div class="flex flex-col lg:flex-row gap-0 lg:gap-12 p-0 lg:p-8 flex-1" :class="{'lg:justify-center': !hasToc, 'lg:justify-center': hasToc}">
+        <card class="mark_body article w-full order-2 lg:order-1" :class="{'lg:w-[70%]': hasToc, 'lg:w-[85%]': !hasToc}">
           <div ref="articleContent" v-html="result"></div>
         </card>
-        <div class="aside_content" v-show="hasToc">
+
+        <!-- 桌面端目录 -->
+        <div v-show="hasToc" class="aside_content hidden lg:block order-1 lg:order-2">
           <Card class="doc_card">
             <div class="headline">
               <font-awesome-icon :icon="['fas', 'bars']" />
@@ -14,6 +16,22 @@
             </div>
             <div class="doc" ref="docContainer"></div>
           </Card>
+        </div>
+
+        <!-- 移动端浮动目录按钮 -->
+        <div v-show="hasToc" class="mobile-toc-container lg:hidden">
+          <button class="mobile-toc-btn" @click="toggleMobileToc" :class="{ active: isMobileTocOpen }">
+            <font-awesome-icon :icon="['fas', 'bars']" />
+          </button>
+          <div class="mobile-toc-panel" :class="{ open: isMobileTocOpen }">
+            <div class="mobile-toc-header">
+              <span>目录</span>
+              <button @click="toggleMobileToc">
+                <font-awesome-icon :icon="['fas', 'times']" />
+              </button>
+            </div>
+            <div class="doc mobile-doc" ref="mobileDocContainer"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -39,14 +57,19 @@ const meta = reactive({
   viewCount: 0,
   comment: 0,
   count: 0,
-  tags: [], // 用于存储标签
+  tags: [],
 })
 
-const docContainer = ref(null); // 用于获取 .doc 容器
-const articleContent = ref(null); // 用于获取 .article 内容容器
-const hasToc = ref(false); // 用于判断是否有目录
+const docContainer = ref(null)
+const mobileDocContainer = ref(null)
+const articleContent = ref(null)
+const isMobileTocOpen = ref(false)
+const hasToc = ref(false)
 
 
+/**
+ * 获取文章数据并处理时间格式
+ */
 async function fetchArticle(id) {
   try {
     const res = await getArticle(id)
@@ -66,6 +89,9 @@ async function fetchArticle(id) {
   }
 }
 
+/**
+ * 更新文章元数据信息
+ */
 function updateMeta() {
   meta.createTime = data.value.createTime || "未知日期"
   meta.updateTime = data.value.updateTime || "未知日期"
@@ -77,139 +103,150 @@ function updateMeta() {
   data.value.meta = meta
 }
 
+/**
+ * 切换移动端目录显示状态
+ */
+const toggleMobileToc = () => {
+  isMobileTocOpen.value = !isMobileTocOpen.value
+}
+
+
+/**
+ * 渲染Markdown内容并检查目录
+ */
 function renderMarkdownAndCheckToc() {
-  if (!content.value) return;
-  
+  if (!content.value) return
+
   // 先渲染Markdown内容
-  result.value = MdToHtml(content.value, docContainer.value);
-  
+  result.value = MdToHtml(content.value, docContainer.value)
+
+  // 渲染移动端目录
+  if (mobileDocContainer.value) {
+    MdToHtml(content.value, mobileDocContainer.value)
+  }
+
   // 在内容渲染后检查目录是否有内容
   nextTick(() => {
-    const tocElement = docContainer.value?.querySelector('nav.toc');
-    hasToc.value = tocElement && tocElement.children.length > 0;
-    
-    copyCode();
+    const tocElement = docContainer.value?.querySelector('nav.toc')
+    hasToc.value = tocElement && tocElement.children.length > 0
+
+    copyCode()
     if (hasToc.value) {
-      initIntersectionObserver();
+      initIntersectionObserver()
     }
-  });
+  })
 }
 
 onMounted(async () => {
-  const id = router.currentRoute.value.params.id;
-  await fetchArticle(id);
-  nextTick(renderMarkdownAndCheckToc);
+  const id = router.currentRoute.value.params.id
+  await fetchArticle(id)
+  nextTick(renderMarkdownAndCheckToc)
 })
 
 
+/**
+ * 初始化目录滚动监听器
+ */
 const initIntersectionObserver = () => {
-  // 如果没有目录容器，直接返回
-  if (!docContainer.value) return;
-  
-  const headings = articleContent.value.querySelectorAll('h1[id], h2[id]'); // 只获取 h1 和 h2
-  const tocLinks = docContainer.value.querySelectorAll('nav.toc a.linkClass');
+  if (!docContainer.value) return
+
+  const headings = articleContent.value.querySelectorAll('h1[id], h2[id]')
+  const tocLinks = docContainer.value.querySelectorAll('.doc nav.toc a.linkClass')
 
   if (!headings.length || !tocLinks.length) {
-    return;
+    return
   }
 
-  // 记录当前激活的标题ID
-  let currentActiveId = null;
+  let currentActiveId = null
 
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach(entry => {
-        const heading = entry.target;
-        const headingId = heading.getAttribute('id');
-        const isH2 = heading.tagName === 'H2';
-        const isH1 = heading.tagName === 'H1';
+        const heading = entry.target
+        const headingId = heading.getAttribute('id')
+        const isH2 = heading.tagName === 'H2'
+        const isH1 = heading.tagName === 'H1'
 
         if (entry.isIntersecting) {
-          let shouldUpdateActive = false;
+          let shouldUpdateActive = false
 
-          // 如果是 H2，直接设置为活动标题
           if (isH2) {
             if (currentActiveId !== headingId) {
-              shouldUpdateActive = true;
+              shouldUpdateActive = true
             }
           }
-          // 如果是 H1，只有当前没有活动的 H2 时才设置
           else if (isH1) {
-            // 检查是否有可见的 H2
             const visibleH2s = Array.from(headings).filter(h => {
-              if (h.tagName !== 'H2') return false;
-              const rect = h.getBoundingClientRect();
-              return rect.top <= window.innerHeight * 0.8 && rect.bottom >= 0;
-            });
+              if (h.tagName !== 'H2') return false
+              const rect = h.getBoundingClientRect()
+              return rect.top <= window.innerHeight * 0.8 && rect.bottom >= 0
+            })
 
-            // 如果没有可见的 H2，并且当前活动ID不是这个 H1
             if (visibleH2s.length === 0 && currentActiveId !== headingId) {
-              shouldUpdateActive = true;
+              shouldUpdateActive = true
             }
           }
 
-          // 只在需要更新时才更新高亮
           if (shouldUpdateActive) {
-            currentActiveId = headingId;
-            updateTocLinks(currentActiveId, tocLinks);
+            currentActiveId = headingId
+            updateTocLinks(currentActiveId, tocLinks)
           }
         }
-        // 当标题离开视图时的处理
         else if (headingId === currentActiveId) {
-          // 找到所有当前可见的标题
           const visibleHeadings = Array.from(headings).filter(h => {
-            const rect = h.getBoundingClientRect();
-            return rect.top <= window.innerHeight * 0.8 && rect.bottom >= 0;
-          });
+            const rect = h.getBoundingClientRect()
+            return rect.top <= window.innerHeight * 0.8 && rect.bottom >= 0
+          })
 
           if (visibleHeadings.length > 0) {
-            // 优先选择可见的 H2，如果没有则选择 H1
-            const visibleH2 = visibleHeadings.find(h => h.tagName === 'H2');
+            const visibleH2 = visibleHeadings.find(h => h.tagName === 'H2')
             const newActiveId = visibleH2 ?
               visibleH2.getAttribute('id') :
-              visibleHeadings[0].getAttribute('id');
+              visibleHeadings[0].getAttribute('id')
 
             if (currentActiveId !== newActiveId) {
-              currentActiveId = newActiveId;
-              updateTocLinks(currentActiveId, tocLinks);
+              currentActiveId = newActiveId
+              updateTocLinks(currentActiveId, tocLinks)
             }
           }
         }
-      });
+      })
     },
     {
       rootMargin: '0px 0px -80% 0px',
       threshold: 0
     }
-  );
+  )
 
   headings.forEach(heading => {
-    observer.observe(heading);
-  });
-};
+    observer.observe(heading)
+  })
+}
 
+/**
+ * 更新目录链接的激活状态
+ */
 const updateTocLinks = (activeId, tocLinks) => {
-  // 如果没有目录链接，直接返回
-  if (!tocLinks || !tocLinks.length) return;
-  
+  if (!tocLinks || !tocLinks.length) return
+
   tocLinks.forEach(link => {
-    const linkHref = link.getAttribute('href').substring(1);
-    const listItem = link.closest('.itemClass');
+    const linkHref = link.getAttribute('href').substring(1)
+    const listItem = link.closest('.itemClass')
 
     if (linkHref === activeId) {
-      listItem.classList.add('active-toc-item');
+      listItem.classList.add('active-toc-item')
     } else {
-      listItem.classList.remove('active-toc-item');
+      listItem.classList.remove('active-toc-item')
     }
-  });
-};
+  })
+}
 
 watch(
   () => data.value.content,
   (newContent) => {
     if (newContent) {
-      content.value = newContent;
-      renderMarkdownAndCheckToc();
+      content.value = newContent
+      renderMarkdownAndCheckToc()
     }
   }
 )
@@ -217,18 +254,21 @@ watch(
 
 
 
-<style scoped>
-.mark_body {
-  padding: 50px 40px;
+<style  scoped lang="scss">
+
+@use "@/assets/styles/markdown/index" as styles;
+
+:deep() {
+  @include styles.article-stycles;
+
+  @include styles.pc-toc-styles;
+
+  @include styles.mobile-article-styles;
+
+  @include styles.mobile-toc-styles;
 }
 
-.article-no-toc {
-  justify-content: center;
-}
-</style>
 
 
 
-<style lang="scss" scoped>
-@import "@/assets/styles/markdown/index"
 </style>

@@ -155,7 +155,46 @@ html {
   width: 23%;
 }
 
+/* 移动端响应式适配 */
+@media (max-width: 1024px) {
+  .aside_content {
+    width: 100%;
+    min-width: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .aside_content {
+    width: 100%;
+    min-width: auto;
+
+    /* 移动端侧边栏水平滚动 */
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 1rem;
+    padding-bottom: 10px;
+
+    &::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .aside_card {
+      flex-shrink: 0;
+      min-width: 250px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .aside_content {
+    .aside_card {
+      min-width: 200px;
+    }
+  }
+}
+
 #app {
+  min-height: 100vh;
 }
 
 @tailwind base;

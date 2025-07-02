@@ -81,8 +81,8 @@
             </svg>
 
         </div>
-        <div class="text-white text-center mt-4">
-            {{ message }}
+        <div class="text-white text-center mt-4 px-4">
+            <span class="text-sm sm:text-base md:text-lg">{{ message }}</span>
         </div>
     </div>
 </template>
@@ -121,8 +121,8 @@ defineExpose({
 /* From Uiverse.io by Nawsome */
 .svg-frame {
     position: relative;
-    width: 300px;
-    height: 300px;
+    width: min(300px, 80vw);
+    height: min(300px, 80vw);
     transform-style: preserve-3d;
     display: flex;
     justify-content: center;
@@ -134,8 +134,10 @@ defineExpose({
     transition: .5s;
     z-index: calc(1 - (0.2 * var(--j)));
     transform-origin: center;
-    width: 344px;
-    height: 344px;
+    width: min(344px, 90vw);
+    height: min(344px, 90vw);
+    max-width: 344px;
+    max-height: 344px;
     fill: none;
 }
 

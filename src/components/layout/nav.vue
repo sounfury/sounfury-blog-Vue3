@@ -5,21 +5,33 @@
         <!-- Site name/logo section -->
         <router-link :to="logoLink" class="site-name">{{ siteName }}</router-link>
 
+        <!-- Mobile menu button -->
+        <button class="mobile-menu-btn lg:hidden" @click="toggleMobileMenu">
+          <font-awesome-icon :icon="['fas', isMobileMenuOpen ? 'times' : 'bars']" />
+        </button>
+
         <!-- Navigation menu -->
-        <div class="menus">
+        <div class="menus" :class="{ 'mobile-open': isMobileMenuOpen }">
           <template v-for="(menuItem, index) in menuItems" :key="index">
-            <div class="menu-item" @mouseenter="openSubmenu(index)" @mouseleave="closeSubmenu(index)">
+            <div class="menu-item"
+                 @mouseenter="!isMobileMenuOpen && openSubmenu(index)"
+                 @mouseleave="!isMobileMenuOpen && closeSubmenu(index)"
+                 @click="isMobileMenuOpen && menuItem.submenu && toggleSubmenu(index)">
               <!-- 一级菜单 -->
-              <component v-hasRole="menuItem.requireRole || []" :is="menuItem.type === 'router' ? 'router-link' : 'a'"
-                :to="menuItem.type === 'router' ? menuItem.link : undefined"
-                :href="menuItem.type === 'external' ? menuItem.link : undefined">
+              <component v-hasRole="menuItem.requireRole || []"
+                         :is="menuItem.type === 'router' ? 'router-link' : 'a'"
+                         :to="menuItem.type === 'router' ? menuItem.link : undefined"
+                         :href="menuItem.type === 'external' ? menuItem.link : undefined"
+                         @click="!menuItem.submenu && closeMobileMenu()">
                 <font-awesome-icon :icon="menuItem.icon" />
                 <span>{{ menuItem.label }}</span>
-                <i v-if="menuItem.submenu" class="fas fa-chevron-down"></i>
+                <i v-if="menuItem.submenu" class="fas fa-chevron-down mobile-chevron"
+                   :class="{ 'rotated': isMobileMenuOpen && isSubmenuOpen[index] }"></i>
               </component>
 
-              <!-- 二级菜单 -->
-              <HovershowCard v-if="menuItem.submenu && isSubmenuOpen[index]" :numberOfLi="menuItem.submenu.length">
+              <!-- 桌面端二级菜单 -->
+              <HovershowCard v-if="!isMobileMenuOpen && menuItem.submenu && isSubmenuOpen[index]"
+                             :numberOfLi="menuItem.submenu.length">
                 <template #item="{ index: subIndex }">
                   <component v-if="menuItem.submenu[subIndex - 1]"
                     :is="menuItem.submenu[subIndex - 1].type === 'router' ? 'router-link' : 'a'"
@@ -30,6 +42,19 @@
                   </component>
                 </template>
               </HovershowCard>
+
+              <!-- 移动端二级菜单 -->
+              <div v-if="isMobileMenuOpen && menuItem.submenu && isSubmenuOpen[index]" class="mobile-submenu">
+                <component v-for="(subItem, subIndex) in menuItem.submenu" :key="subIndex"
+                           :is="subItem.type === 'router' ? 'router-link' : 'a'"
+                           :to="subItem.type === 'router' ? subItem.link : undefined"
+                           :href="subItem.type === 'external' ? subItem.link : undefined"
+                           class="mobile-submenu-item"
+                           @click="closeMobileMenu()">
+                  <font-awesome-icon :icon="subItem.icon" />
+                  {{ subItem.label }}
+                </component>
+              </div>
             </div>
           </template>
 
@@ -37,7 +62,7 @@
         </div>
 
         <!-- Right side of navigation -->
-        <div class="navright">
+        <div class="navright" :class="{ 'mobile-open': isMobileMenuOpen }">
           <font-awesome-icon v-if="showSearch" :icon="['fas', 'magnifying-glass']" class="search"
             @click="onSearchClick" />
           <div class="login-btn" v-if="showLogin" @click="openLoginDialog" @mouseover="isHovering = true"
@@ -108,7 +133,7 @@ const isShow = ref(false)
 const isTop = ref(true)
 const dialogVisible = ref(false)
 const isSubmenuOpen = ref([])
-
+const isMobileMenuOpen = ref(false)
 const isHovering = ref(false); // 是否 hover 的状态
 
 // 根据 hover 状态动态显示用户名或 "Log Out"
@@ -128,6 +153,28 @@ const openSubmenu = (index) => {
 
 const closeSubmenu = (index) => {
   isSubmenuOpen.value[index] = false
+}
+
+// 切换子菜单（移动端）
+const toggleSubmenu = (index) => {
+  const newSubmenuState = [...isSubmenuOpen.value]
+  newSubmenuState[index] = !newSubmenuState[index]
+  isSubmenuOpen.value = newSubmenuState
+}
+
+// 移动端菜单切换
+const toggleMobileMenu = () => {
+  isMobileMenuOpen.value = !isMobileMenuOpen.value
+  // 关闭所有子菜单
+  if (!isMobileMenuOpen.value) {
+    isSubmenuOpen.value = new Array(props.menuItems.length).fill(false)
+  }
+}
+
+// 关闭移动端菜单
+const closeMobileMenu = () => {
+  isMobileMenuOpen.value = false
+  isSubmenuOpen.value = new Array(props.menuItems.length).fill(false)
 }
 
 //登录弹窗
@@ -265,6 +312,7 @@ img {
   margin-left: 130px;
   font-size: 18px;
   width: 15%;
+  flex-shrink: 0;
 }
 
 .nav {
@@ -325,6 +373,7 @@ img {
   width: 20%;
   padding-left: 20px;
   color: #eee;
+  flex-shrink: 0;
 }
 
 .site-name:hover {
@@ -390,6 +439,155 @@ img {
   transition: transform 0.6s ease;
 }
 
+/* 移动端样式 */
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: #eee;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 10px;
+  z-index: 1001;
+}
+
+@media (max-width: 1024px) {
+  .mobile-menu-btn {
+    display: block;
+  }
+
+  .nav {
+    padding: 0 15px;
+  }
+
+  .site-name {
+    width: auto;
+    padding-left: 0;
+    font-size: 16px;
+  }
+
+  .menus {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    background: var(--card_background_color);
+    backdrop-filter: blur(10px);
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    padding: 0;
+    transform: translateY(-100%);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    z-index: 999;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .menus.mobile-open {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .menu-item {
+    width: 100%;
+    padding: 15px 20px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    min-width: auto;
+
+    & a {
+      color: var(--font-color) !important;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+  }
+
+  .menu-item::after {
+    display: none;
+  }
+
+  .mobile-chevron.rotated {
+    transform: rotate(180deg);
+  }
+
+  .mobile-submenu {
+    background: rgba(0, 0, 0, 0.2);
+    margin: 0;
+    padding: 0;
+  }
+
+  .mobile-submenu-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 30px;
+    color: var(--font-color) !important;
+    font-size: 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+  }
+
+  .show .menus,
+  .show .navright {
+    background: var(--card_background_color);
+  }
+
+  .navright {
+    position: static;
+    margin-left: 0;
+    width: auto;
+    padding: 15px 20px;
+    justify-content: center;
+    gap: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: none;
+  }
+
+  .navright.mobile-open {
+    display: flex;
+  }
+
+  .show .menus,
+  .show .navright {
+    background: rgba(255, 255, 255, 0.95);
+  }
+}
+
+/* 黑夜主题下的移动端导航优化 */
+html[data-theme="dark"] {
+  @media (max-width: 1024px) {
+    .menus {
+      background: rgba(27, 27, 27, 0.95) !important;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .navright {
+      background: rgba(27, 27, 27, 0.95) !important;
+    }
+
+    .mobile-submenu {
+      background: rgba(0, 0, 0, 0.4) !important;
+    }
+
+    .show .menus,
+    .show .navright {
+      background: rgba(27, 27, 27, 0.95) !important;
+    }
+  }
+}
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;

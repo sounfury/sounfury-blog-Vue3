@@ -1,14 +1,16 @@
 <template>
-  <div class="home pt-12">
-    <div class="w-11/12 m-auto flex justify-center gap-14">
-      <div class="w-9/12">
+  <div class="home pt-4 lg:pt-12">
+    <div class="w-11/12 lg:w-11/12 m-auto flex flex-col lg:flex-row justify-center gap-4 lg:gap-14">
+      <!-- 主内容区 -->
+      <div class="w-full lg:w-9/12 order-2 lg:order-1">
         <PostCards :articles="articles" class="w-full" />
         <Pagination v-if="isPageLoaded" :total="total" :pageNum="pageQuery.page" :pageSize="pageQuery.size"
           @page-change="handlePageChange" />
       </div>
-      <asideCards :activeCards="['aboutMe', 'notice', 'weather', 'filing', 'info']"
-        class="aside_content gap-8 flex flex-col" />
 
+      <!-- 侧边栏 - 移动端隐藏，桌面端在右侧 -->
+      <asideCards :activeCards="['aboutMe', 'notice', 'weather', 'filing', 'info']"
+        class="aside_content gap-4 lg:gap-8 flex-col w-full lg:w-auto order-1 lg:order-2 hidden lg:flex" />
     </div>
   </div>
 </template>

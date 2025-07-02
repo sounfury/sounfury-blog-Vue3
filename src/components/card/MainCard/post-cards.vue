@@ -147,4 +147,73 @@ const props = defineProps({
     height: 200px;
   }
 }
+
+/* 移动端响应式适配 */
+@media (max-width: 768px) {
+  .post_cards {
+    .cards_item {
+      height: auto;
+      flex-direction: column !important;
+
+      & a {
+        width: 100%;
+        height: 200px;
+      }
+
+      &:nth-child(even) {
+        flex-direction: column !important;
+      }
+    }
+
+    .bw_intr {
+      width: 100%;
+      padding: 20px 15px;
+
+      & a {
+        font-size: 1.3em;
+      }
+
+      .article_meta {
+        flex-wrap: wrap;
+        gap: 5px;
+
+        &::after {
+          display: none;
+        }
+      }
+
+      .article_meta_item {
+        font-size: 0.7em;
+        padding-right: 8px;
+      }
+
+      .article_cut {
+        font-size: 0.8em;
+        -webkit-line-clamp: 2;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .post_cards {
+    .cards_item {
+      & a {
+        height: 150px;
+      }
+    }
+
+    .bw_intr {
+      padding: 15px 10px;
+
+      & a {
+        font-size: 1.2em;
+      }
+
+      .article_meta_item {
+        font-size: 0.65em;
+      }
+    }
+  }
+}
 </style>
