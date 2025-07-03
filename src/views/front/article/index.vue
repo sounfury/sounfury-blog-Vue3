@@ -2,7 +2,7 @@
   <div class="article_page ">
     <article-header v-bind="data" />
     <div class="w-full lg:w-[95%] lg:m-auto">
-      <div class="flex flex-col lg:flex-row gap-0 lg:gap-12 p-0 lg:p-8 flex-1" :class="{'lg:justify-center': !hasToc, 'lg:justify-center': hasToc}">
+      <div class="flex flex-col lg:flex-row gap-0 lg:gap-12 p-0 lg:p-8 flex-1" :class="{'lg:justify-center': !hasToc}">
         <card class="mark_body article w-full order-2 lg:order-1" :class="{'lg:w-[70%]': hasToc, 'lg:w-[85%]': !hasToc}">
           <div ref="articleContent" v-html="result"></div>
         </card>

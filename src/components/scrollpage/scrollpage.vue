@@ -12,8 +12,8 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import typewriter from "@/utils/typewriter";
+import { ref, onMounted, onUnmounted, watch } from "vue";
+import { startTypeWriter, clearTypeWriter } from "@/utils/typewriter";
 
 const show_text = ref("");
 const text1 = ref("");
@@ -25,11 +25,22 @@ const props = defineProps({
   TypingEffectSecondLine: String,
 });
 
-watch(props, () => {
-  text1.value = props.TypingEffectFirstLine;
-  text2.value = props.TypingEffectSecondLine;
-  typewriter(text1.value, text2.value, show_text);
-});
+// 启动打字机效果的函数
+const startTypingEffect = () => {
+  if (text1.value && text2.value) {
+    startTypeWriter(text1.value, text2.value, show_text);
+  }
+};
+
+// 监听props变化
+watch(() => [props.TypingEffectFirstLine, props.TypingEffectSecondLine],
+  ([newFirstLine, newSecondLine]) => {
+    text1.value = newFirstLine || "";
+    text2.value = newSecondLine || "";
+    startTypingEffect();
+  },
+  { immediate: true }
+);
 
 const headerRef = ref(null);
 
@@ -47,7 +58,13 @@ const scrollToHeaderHeight = () => {
 };
 
 onMounted(() => {
+  // 组件挂载时启动打字机效果
+  startTypingEffect();
+});
 
+// 组件卸载时清理打字机效果
+onUnmounted(() => {
+  clearTypeWriter();
 });
 </script>
 <style scoped>

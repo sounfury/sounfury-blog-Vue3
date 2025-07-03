@@ -454,16 +454,23 @@ img {
 @media (max-width: 1024px) {
   .mobile-menu-btn {
     display: block;
+    color: var(--font-color); /* 使用主题字体颜色 */
   }
 
   .nav {
     padding: 0 15px;
+    background: var(--card_background_color);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--font-color); /* 使用主题字体颜色 */
   }
 
   .site-name {
     width: auto;
     padding-left: 0;
     font-size: 16px;
+    color: var(--font-color); /* 使用主题字体颜色 */
   }
 
   .menus {

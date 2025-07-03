@@ -5,8 +5,7 @@
     background-color: $background-color-pre; // 仍然使用 var(--font-color)，主题 scss 控制
     margin: 25px;
     position: relative;
-    overflow-y: hidden;
-    overflow-x: auto;
+    overflow: hidden; // 防止pre容器滚动
     max-width: 100%;
     word-wrap: break-word;
     box-shadow: 0 0 20px 5px rgba(0, 0, 0, 0.4);
@@ -31,9 +30,13 @@
   }
 
   code {
+    display: block; // 确保code标签为块级元素
     min-height: 70px;
     padding: 6px 12px;
     font-family: monospace; // code 标签通常使用 monospace
+    overflow-x: auto; // 只让代码内容水平滚动
+    overflow-y: hidden;
+    max-width: 100%;
     & li {
       //左侧border
       border-left: 3px solid $blockquote-border-color;
