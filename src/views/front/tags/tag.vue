@@ -47,9 +47,20 @@ const fetchArticles = async () => {
   isPageLoaded.value = true
 }
 
+// 组件挂载时初始化数据
+onMounted(async () => {
+  if (props.tagId) {
+    pageQuery.value.tagId = props.tagId
+    await fetchArticles()
+  }
+})
+
 watch(() => props.tagId, async (newVal) => {
-  pageQuery.value.tagId = newVal
-  await fetchArticles()
+  if (newVal) {
+    pageQuery.value.tagId = newVal
+    pageQuery.value.page = 1 // 重置页码
+    await fetchArticles()
+  }
 })
 
 

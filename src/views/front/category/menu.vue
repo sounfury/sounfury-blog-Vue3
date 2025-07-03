@@ -24,7 +24,6 @@
 
 
                 <div class="menu-text flex-grow transition-all duration-100 ease-in-out" :class="{
-            'lg:inline hidden': true,
             'text-blue-800 font-medium': selectedId === item.id,
             'group-hover:translate-x-1': true
         }">

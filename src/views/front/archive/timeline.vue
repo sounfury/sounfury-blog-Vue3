@@ -333,10 +333,32 @@ onUnmounted(() => {
 
 
 @media only screen and (max-width: 767px) {
+  /* 页面标题优化 */
+  .title {
+    font-size: 28px;
+  }
+
+  .subtitle {
+    font-size: 14px;
+    letter-spacing: 3px;
+  }
+
+  /* 日期显示优化 */
+  .content-title {
+    font-size: 36px;
+    margin: -5px 0 10px 0;
+  }
+
+  /* 描述文字优化 */
+  .content-desc {
+    font-size: 14px;
+    line-height: 22px;
+  }
+
   .item {
     align-self: baseline !important;
     width: 100%;
-    padding: 0 30px 150px 80px;
+    padding: 0 30px 120px 80px; /* 减少底部间距 */
   }
 
   .item:before {
@@ -346,6 +368,8 @@ onUnmounted(() => {
     text-align: center !important;
     width: 60px;
     border: none !important;
+    font-size: 16px; /* 文章标题字体优化 */
+    letter-spacing: 3px;
   }
 
   .item:last-child {
@@ -354,6 +378,11 @@ onUnmounted(() => {
 
   .timeline:before {
     left: 40px;
+  }
+
+  /* 头部区域优化 */
+  .header {
+    margin-bottom: 60px; /* 减少底部间距 */
   }
 }
 </style>

@@ -211,4 +211,119 @@ watch(() => pageQuery.value, fetchArticles, { deep: true })
     transform: translateX(-20px);
   }
 }
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+  /* 主容器适配 */
+  .flex.p-12 {
+    padding: 1rem;
+    flex-direction: column;
+  }
+
+  /* 分类树移动端适配 */
+  .category-floating-container {
+    left: 0.5rem;
+    top: 20%;
+  }
+
+  .category-floating-ball {
+    width: 40px;
+    height: 40px;
+  }
+
+  .category-tree-card {
+    width: 250px;
+    max-height: 60vh;
+  }
+
+  /* 移动端隐藏滚动条 */
+  .category-tree-card::-webkit-scrollbar {
+    width: 0;
+    display: none;
+  }
+
+  /* 右侧内容区适配 */
+  .flex-1.p-6 {
+    padding: 1rem;
+    margin-top: 0;
+  }
+
+  .category_card {
+    padding: 1rem;
+  }
+
+  /* 文章列表项适配 */
+  .space-y-6 > div {
+    flex-direction: column;
+    space-x: 0;
+    padding: 1rem;
+  }
+
+  .space-y-6 > div .w-48 {
+    width: 100%;
+    height: 200px;
+    margin-bottom: 1rem;
+  }
+
+  .space-y-6 > div .flex-1 {
+    margin-bottom: 0.5rem;
+  }
+
+  .space-y-6 > div .text-xl {
+    font-size: 1.125rem;
+    line-height: 1.5;
+  }
+
+  .space-y-6 > div .text-gray-400 {
+    align-self: flex-end;
+    margin-top: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  /* 小屏幕进一步优化 */
+  .flex.p-12 {
+    padding: 0.5rem;
+  }
+
+  .category-floating-container {
+    left: 0.25rem;
+    top: 15%;
+  }
+
+  .category-floating-ball {
+    width: 36px;
+    height: 36px;
+  }
+
+  .category-tree-card {
+    width: 220px;
+    max-height: 50vh;
+    padding: 0.75rem;
+  }
+
+  .flex-1.p-6 {
+    padding: 0.5rem;
+  }
+
+  .category_card {
+    padding: 0.75rem;
+  }
+
+  .space-y-6 > div {
+    padding: 0.75rem;
+  }
+
+  .space-y-6 > div .w-48 {
+    height: 160px;
+  }
+
+  .space-y-6 > div .text-xl {
+    font-size: 1rem;
+  }
+
+  .space-y-6 > div .text-gray-600 {
+    font-size: 0.875rem;
+  }
+}
 </style>

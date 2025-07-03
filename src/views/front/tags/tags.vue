@@ -4,9 +4,11 @@
       <div class="tags_content"></div>
     </card>
 
-    <div class="m-44 flex justify-center flex-col">
-      <tag :tag-id=activeId></tag>
-    </div>
+    <ArticleListLayout v-if="activeId" :show-sidebar="false" class="article-list-with-tags">
+      <template #content>
+        <tag :tag-id="activeId"></tag>
+      </template>
+    </ArticleListLayout>
   </div>
 </template>
 
@@ -15,6 +17,7 @@ import tag from "./tag.vue"
 import { inject, ref } from "vue"
 import { onMounted } from "vue"
 import Card from "@/components/card/BaseCard/card.vue"
+import ArticleListLayout from "@/components/layout/ArticleListLayout.vue"
 import * as echarts from "echarts"
 import "echarts-wordcloud"
 import { getAllTags } from "@/api/tags"
@@ -52,6 +55,11 @@ onMounted(async () => {
 
   const mychart = echarts.init(chartContainer)
 
+  // 根据屏幕尺寸调整字体大小范围
+  const isMobile = window.innerWidth <= 768
+  const sizeRange = isMobile ? [8, 28] : [12, 50]
+  const gridSize = isMobile ? 8 : 10
+
   mychart.setOption({
     title: {
       text: "",
@@ -70,9 +78,9 @@ onMounted(async () => {
         top: "0%",
         width: "100%",
         height: "100%",
-        sizeRange: [12, 50],
+        sizeRange: sizeRange,
         rotationRange: [0, 10],
-        gridSize: 10,
+        gridSize: gridSize,
         layoutAnimation: true,
         textStyle: {
           fontFamily: "sans-serif",
@@ -114,10 +122,52 @@ onMounted(async () => {
   top: 35%;
   z-index: 100;
   left: 10%;
-  background-color: hsla(0, 0%, 100%, 0.9);
+  background-color: var(--card_background_color); /* 使用主题背景色 */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
 .tags_content {
   height: 250px;
+}
+
+/* 文章列表与标签云的间距 */
+.article-list-with-tags {
+  margin-top: 100px; /* PC端为标签云预留空间，减少间距 */
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+  .tags_card {
+    width: 95%;
+    left: 2.5%;
+    height: 200px;
+    top: calc(400px - 100px); /* 头图高度400px，标签云一半在内一半在外 */
+    position: absolute; /* 确保绝对定位 */
+  }
+
+  .tags_content {
+    height: 200px;
+  }
+
+  .article-list-with-tags {
+    margin-top: calc(400px - 280px); /* 从标签云中间开始，让标签云一半在头图内 */
+  }
+}
+
+@media (max-width: 480px) {
+  .tags_card {
+    width: 98%;
+    left: 1%;
+    height: 180px;
+    top: calc(400px - 90px); /* 调整小屏幕的位置 */
+    position:  absolute; /* 确保绝对定位 */
+  }
+
+  .tags_content {
+    height: 180px;
+  }
 }
 </style>
