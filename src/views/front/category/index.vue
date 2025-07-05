@@ -16,7 +16,7 @@
       <card class="category_card p-6">
         <div class="space-y-6">
           <div v-for="(item, index) in articles" :key="item.id"
-            class="flex items-start space-x-6 p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 cursor-pointer"
+            class="article-item flex items-start space-x-6 p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 cursor-pointer"
             @click="router.push('/article/' + item.id)">
             <div class="w-48 h-32 overflow-hidden rounded-lg">
               <img :src="item.thumbnail"
@@ -24,17 +24,17 @@
             </div>
 
             <div class="flex-1">
-              <h2 class="text-xl font-semibold mb-2 hover:text-blue-600 transition-colors duration-200">
+              <h2 class="article-title text-xl font-semibold mb-2 hover:text-blue-600 transition-colors duration-200">
                 {{ item.title }}
               </h2>
-              <p class="text-gray-600 line-clamp-2">{{ item.summary }}</p>
+              <p class="article-summary line-clamp-2">{{ item.summary }}</p>
             </div>
 
-            <span class="text-gray-400 text-lg font-medium">{{ index + 1 }}</span>
+            <span class="article-index text-lg font-medium">{{ index + 1 }}</span>
           </div>
         </div>
 
-        <div v-if="articles.length === 0" class="flex items-center justify-center h-40 text-gray-500">
+        <div v-if="articles.length === 0" class="empty-state flex items-center justify-center h-40">
           暂无文章
         </div>
 
@@ -123,7 +123,33 @@ watch(() => pageQuery.value, fetchArticles, { deep: true })
 
 <style scoped>
 .category_card {
-  @apply bg-gray-50 min-h-full;
+  background-color: var(--card_background_color);
+  min-height: 100%;
+}
+
+/* 文章列表项主题适配 */
+.article-item {
+  background-color: var(--card_background_color);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.article-title {
+  color: var(--title-color);
+}
+
+.article-summary {
+  color: var(--font-color);
+  opacity: 0.8;
+}
+
+.article-index {
+  color: var(--font-color);
+  opacity: 0.6;
+}
+
+.empty-state {
+  color: var(--font-color);
+  opacity: 0.6;
 }
 
 .category-floating-container {
@@ -153,14 +179,16 @@ watch(() => pageQuery.value, fetchArticles, { deep: true })
 }
 
 .category-tree-card {
-  @apply p-4 bg-white rounded-lg shadow-lg;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   width: 280px;
   max-height: 80vh;
   overflow-y: auto;
   backdrop-filter: blur(10px);
-  background: rgba(255, 255, 255, 0.95);
-  border: 1px solid rgba(229, 231, 235, 0.5);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  -webkit-backdrop-filter: blur(10px);
+  background: var(--card_background_color);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   opacity: 0;
   transform: translateX(-20px);
@@ -324,6 +352,29 @@ watch(() => pageQuery.value, fetchArticles, { deep: true })
 
   .space-y-6 > div .text-gray-600 {
     font-size: 0.875rem;
+  }
+}
+
+/* 黑夜主题特殊适配 */
+html[data-theme="dark"] {
+  .article-item {
+    background-color: var(--card_background_color);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .article-item:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .category-tree-card {
+    background: var(--card_background_color);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+
+  .category-floating-ball {
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
   }
 }
 </style>

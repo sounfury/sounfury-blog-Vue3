@@ -1,17 +1,17 @@
 <template>
     <div >
         <div  v-for="item in items" :key="item.id" class="group">
-            <div class="mt-2 rounded-lg flex items-center p-2 cursor-pointer hover:bg-blue-50 transition-all duration-100 ease-in-out 
+            <div class="menu-item-wrapper mt-2 rounded-lg flex items-center p-2 cursor-pointer transition-all duration-100 ease-in-out
                        hover:shadow-sm hover:translate-x-1 group-hover:border-l-4 border-blue-500" :class="{
-            'bg-blue-100 text-blue-800 font-semibold': selectedId === item.id,
-            'text-gray-700': selectedId !== item.id
+            'menu-item-selected font-semibold': selectedId === item.id,
+            'menu-item-normal': selectedId !== item.id
         }" @click="handleSelect(item)" @mouseenter="hoverState[item.id] = true"
                 @mouseleave="hoverState[item.id] = false">
                 <span v-if="item.children && item.children.length"
                     class="expand-icon mr-2 transition-transform duration-100 ease-in-out transform" :class="{
             'rotate-90': openNodes[item.id],
-            'text-gray-500': !hoverState[item.id],
-            'text-blue-600': hoverState[item.id]
+            'expand-icon-normal': !hoverState[item.id],
+            'expand-icon-hover': hoverState[item.id]
         }">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd"
@@ -24,7 +24,7 @@
 
 
                 <div class="menu-text flex-grow transition-all duration-100 ease-in-out" :class="{
-            'text-blue-800 font-medium': selectedId === item.id,
+            'menu-text-selected font-medium': selectedId === item.id,
             'group-hover:translate-x-1': true
         }">
                     {{ item.name }}
@@ -79,7 +79,42 @@ const handleSelect = (item) => {
 <style scoped>
 /* 分类树样式 */
 .group {
-  @apply mb-2;
+  margin-bottom: 0.5rem;
+}
+
+/* 主题适配样式 */
+.menu-item-wrapper {
+  color: var(--font-color);
+}
+
+.menu-item-wrapper:hover {
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+.menu-item-selected {
+  background-color: rgba(59, 130, 246, 0.2);
+  color: #1e40af;
+}
+
+.menu-item-normal {
+  color: var(--font-color);
+}
+
+.expand-icon-normal {
+  color: var(--font-color);
+  opacity: 0.6;
+}
+
+.expand-icon-hover {
+  color: #2563eb;
+}
+
+.menu-text {
+  color: var(--font-color);
+}
+
+.menu-text-selected {
+  color: #1e40af;
 }
 
 .group > div {
@@ -107,30 +142,35 @@ const handleSelect = (item) => {
   }
 }
 .group > div:hover {
-  @apply bg-blue-50;
+  background-color: rgba(59, 130, 246, 0.1);
   transform: translateX(0.25rem);
 }
 
 .group > div.active {
-  @apply bg-blue-100 text-blue-800;
+  background-color: rgba(59, 130, 246, 0.2);
+  color: #1e40af;
   font-weight: 600;
 }
 
 .menu-text {
-  @apply text-sm font-medium;
+  font-size: 0.875rem;
+  font-weight: 500;
   transition: all 0.3s ease;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: var(--font-color);
 }
 
 .expand-icon {
-  @apply text-gray-400 flex-shrink-0;
+  color: var(--font-color);
+  opacity: 0.6;
+  flex-shrink: 0;
   transition: all 0.3s ease;
 }
 
 .expand-icon.rotate-90 {
-  @apply text-blue-600;
+  color: #2563eb;
 }
 
 /* 子菜单动画 */
@@ -146,12 +186,13 @@ const handleSelect = (item) => {
 }
 
 .submenu .group > div {
-  @apply bg-transparent;
+  background: transparent;
   padding: 0.5rem 0.75rem;
   border-radius: 0.5rem;
   margin-bottom: 0.25rem;
   animation: none; /* 移除子菜单项的动画，避免重复 */
   opacity: 1; /* 确保子菜单项始终不透明 */
+  color: var(--font-color);
 }
 
 /* 确保子菜单在关闭状态下完全隐藏 */
@@ -164,11 +205,11 @@ const handleSelect = (item) => {
 
 /* 悬停效果 */
 .group > div:hover .menu-text {
-  @apply text-blue-600;
+  color: #2563eb;
 }
 
 .group > div:hover .expand-icon {
-  @apply text-blue-500;
+  color: #3b82f6;
 }
 
 </style>

@@ -24,6 +24,11 @@
   --card_radius: 8px;
   --scrollbar-color: #49b1f5;
 
+  /* 导航栏专用背景色 */
+  --nav-mobile-bg: rgba(255, 255, 255, 0.85);
+  --nav-mobile-border: rgba(255, 255, 255, 0.2);
+  --nav-mobile-divider: rgba(0, 0, 0, 0.1); /* 亮色主题分割线 */
+
   --block-lineNum-color: rgba(255, 255, 255, 0.4);
   --blockquote-bg: rgba(73, 177, 245, 0.1);
   --blockquote-color: #6a737d;
@@ -58,6 +63,11 @@ html[data-theme="dark"] {
   --scr-title-color: #eee;
   --scr-shadow-color: rgba(0, 0, 0, 0.2);
   --block-lineNum-color: rgba(255, 255, 255, 0.4);
+
+  /* 导航栏专用背景色 - 暗色主题 */
+  --nav-mobile-bg: rgba(27, 27, 27, 0.85);
+  --nav-mobile-border: rgba(255, 255, 255, 0.15);
+  --nav-mobile-divider: rgba(255, 255, 255, 0.15); /* 暗色主题分割线 */
   /* 滑动条样式*/
 }
 

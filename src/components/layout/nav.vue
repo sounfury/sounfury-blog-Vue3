@@ -13,13 +13,12 @@
         <!-- Navigation menu -->
         <div class="menus" :class="{ 'mobile-open': isMobileMenuOpen }">
           <template v-for="(menuItem, index) in menuItems" :key="index">
-            <div class="menu-item"
+            <div class="menu-item" v-hasRole="menuItem.requireRole || []"
                  @mouseenter="!isMobileMenuOpen && openSubmenu(index)"
                  @mouseleave="!isMobileMenuOpen && closeSubmenu(index)"
                  @click="isMobileMenuOpen && menuItem.submenu && toggleSubmenu(index)">
               <!-- 一级菜单 -->
-              <component v-hasRole="menuItem.requireRole || []"
-                         :is="menuItem.type === 'router' ? 'router-link' : 'a'"
+              <component :is="menuItem.type === 'router' ? 'router-link' : 'a'"
                          :to="menuItem.type === 'router' ? menuItem.link : undefined"
                          :href="menuItem.type === 'external' ? menuItem.link : undefined"
                          @click="!menuItem.submenu && closeMobileMenu()">
@@ -33,7 +32,7 @@
               <HovershowCard v-if="!isMobileMenuOpen && menuItem.submenu && isSubmenuOpen[index]"
                              :numberOfLi="menuItem.submenu.length">
                 <template #item="{ index: subIndex }">
-                  <component v-if="menuItem.submenu[subIndex - 1]"
+                  <component v-if="menuItem.submenu && subIndex <= menuItem.submenu.length && menuItem.submenu[subIndex - 1]"
                     :is="menuItem.submenu[subIndex - 1].type === 'router' ? 'router-link' : 'a'"
                     :to="menuItem.submenu[subIndex - 1].type === 'router' ? menuItem.submenu[subIndex - 1].link : undefined"
                     :href="menuItem.submenu[subIndex - 1].type === 'external' ? menuItem.submenu[subIndex - 1].link : undefined">
@@ -459,10 +458,13 @@ img {
 
   .nav {
     padding: 0 15px;
-    background: var(--card_background_color);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--nav-mobile-bg);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    -moz-backdrop-filter: blur(15px);
+    -ms-backdrop-filter: blur(15px);
+    will-change: backdrop-filter;
+    border-bottom: 1px solid var(--nav-mobile-border);
     color: var(--font-color); /* 使用主题字体颜色 */
   }
 
@@ -478,8 +480,13 @@ img {
     top: 60px;
     left: 0;
     width: 100%;
-    background: var(--card_background_color);
-    backdrop-filter: blur(10px);
+    background: var(--nav-mobile-bg);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    -moz-backdrop-filter: blur(15px);
+    -ms-backdrop-filter: blur(15px);
+    will-change: backdrop-filter, transform, opacity;
+
     flex-direction: column;
     justify-content: flex-start;
     align-items: stretch;
@@ -490,7 +497,7 @@ img {
     transition: all 0.3s ease-in-out;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     z-index: 999;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--nav-mobile-border);
   }
 
   .menus.mobile-open {
@@ -503,7 +510,7 @@ img {
     width: 100%;
     padding: 15px 20px;
     text-align: left;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid var(--nav-mobile-divider);
     min-width: auto;
 
     & a {
@@ -528,7 +535,6 @@ img {
   }
 
   .mobile-submenu {
-    background: rgba(0, 0, 0, 0.2);
     margin: 0;
     padding: 0;
   }
@@ -540,7 +546,7 @@ img {
     padding: 12px 30px;
     color: var(--font-color) !important;
     font-size: 14px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid var(--nav-mobile-divider);
 
     &:hover {
       background: rgba(255, 255, 255, 0.1);
@@ -549,7 +555,7 @@ img {
 
   .show .menus,
   .show .navright {
-    background: var(--card_background_color);
+    background: var(--nav-mobile-bg);
   }
 
   .navright {
@@ -559,7 +565,7 @@ img {
     padding: 15px 20px;
     justify-content: center;
     gap: 20px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid var(--nav-mobile-divider);
     display: none;
   }
 
@@ -569,29 +575,26 @@ img {
 
   .show .menus,
   .show .navright {
-    background: rgba(255, 255, 255, 0.95);
+    background: var(--nav-mobile-bg);
   }
 }
 
 /* 黑夜主题下的移动端导航优化 */
 html[data-theme="dark"] {
   @media (max-width: 1024px) {
-    .menus {
-      background: rgba(27, 27, 27, 0.95) !important;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    .navright {
-      background: rgba(27, 27, 27, 0.95) !important;
+    .nav,
+    .menus,
+    .navright,
+    .show .menus,
+    .show .navright {
+      background: var(--nav-mobile-bg) !important;
+      border-color: var(--nav-mobile-border) !important;
     }
 
     .mobile-submenu {
       background: rgba(0, 0, 0, 0.4) !important;
-    }
-
-    .show .menus,
-    .show .navright {
-      background: rgba(27, 27, 27, 0.95) !important;
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
     }
   }
 }

@@ -1,8 +1,14 @@
 <template>
   <div class="post_cards">
-    <card :style="{ 'box-shadow': box_shadow }" class="cards_item" v-for="(article, index) in articles" :key="index">
+    <card :style="{ 'box-shadow': box_shadow }" class="cards_item" v-for="(article, index) in processedArticles" :key="index">
       <router-link :to="'/article/' + article.id">
-        <img :src="article.thumbnail || fallbackImage" alt="文章缩略图" />
+        <LazyImage
+          :blur-src="article.imageUrls.blur"
+          :high-res-src="article.imageUrls.high"
+          :mobile-high-res-src="article.imageUrls.mobileHigh"
+          :alt="article.title + '缩略图'"
+          class="article-image"
+        />
       </router-link>
       <div class="bw_intr">
         <router-link :to="'/article/' + article.id">
@@ -32,13 +38,25 @@
 </template>
 
 <script setup>
-import { defineProps } from "vue"
+import { defineProps, computed } from "vue"
 import Card from "@/components/card/BaseCard/card.vue"
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"
-const fallbackImage = "https://via.placeholder.com/150"
+import LazyImage from "@/components/LazyImage/index.vue"
+import { generateProgressiveImagePair } from "@/utils/imageUtils.js"
+
 const props = defineProps({
   articles: Array, // 文章数据
   box_shadow: String, // 卡片阴影
+})
+
+// 处理文章缩略图，生成渐进式图片对
+const processedArticles = computed(() => {
+  if (!props.articles) return []
+
+  return props.articles.map(article => ({
+    ...article,
+    imageUrls: generateProgressiveImagePair(article.thumbnail)
+  }))
 })
 </script>
 
@@ -70,6 +88,32 @@ const props = defineProps({
       transition-property: filter, transform;
 
       &:hover {
+        transform: scale(1.1);
+      }
+    }
+
+    .article-image {
+      width: 100%;
+      height: 100%;
+
+      :deep(.lazy-image-container) {
+        width: 100%;
+        height: 100%;
+
+        &::before {
+          padding-bottom: 0; /* 移除默认宽高比，使用父容器的高度 */
+        }
+
+        .lazy-image {
+          transition: filter 375ms ease-in 0.2s, transform 0.6s;
+          transition-duration: 375ms, 0.6s;
+          transition-timing-function: ease-in, ease;
+          transition-delay: 0.2s, 0s;
+          transition-property: filter, transform;
+        }
+      }
+
+      &:hover :deep(.lazy-image) {
         transform: scale(1.1);
       }
     }
