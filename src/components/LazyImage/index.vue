@@ -1,5 +1,5 @@
 <template>
-  <div ref="imageRef" class="lazy-image-container" :class="className">
+  <div ref="imageRef" class="lazy-image-container" :class="[className, { 'has-explicit-height': !useAspectRatio }]">
     <!-- 模糊占位图 -->
     <img
       :src="blurSrc"
@@ -12,7 +12,7 @@
     <!-- 高清图 -->
     <img
       v-if="shouldLoadHighRes"
-      :src="highResSrc"
+      :src="finalHighResSrc"
       :alt="alt"
       :style="imageStyle"
       class="lazy-image high-res-image"
@@ -77,6 +77,11 @@ const props = defineProps({
   rootMargin: {
     type: String,
     default: '50px'
+  },
+  // 是否使用固定宽高比（当父容器没有明确高度时）
+  useAspectRatio: {
+    type: Boolean,
+    default: true
   }
 })
 
@@ -89,11 +94,19 @@ const hasError = ref(false)
 const observer = ref(null)
 
 // 计算属性
-const imageStyle = computed(() => ({
-  width: typeof props.width === 'number' ? `${props.width}px` : props.width,
-  height: typeof props.height === 'number' ? `${props.height}px` : props.height,
-  objectFit: 'cover'
-}))
+const imageStyle = computed(() => {
+  const style = {
+    width: typeof props.width === 'number' ? `${props.width}px` : props.width,
+    objectFit: 'cover'
+  }
+
+  // 只有在使用固定宽高比时才设置height样式，否则让CSS控制
+  if (props.useAspectRatio) {
+    style.height = typeof props.height === 'number' ? `${props.height}px` : props.height
+  }
+
+  return style
+})
 
 // 根据屏幕尺寸选择合适的高清图
 const finalHighResSrc = computed(() => {
@@ -171,18 +184,22 @@ export default {
 .lazy-image-container {
   position: relative;
   overflow: hidden;
-  display: inline-block;
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .lazy-image {
   width: 100%;
   height: 100%;
-  transition: opacity 0.3s ease-in-out;
+  object-fit: cover;
+  transition: opacity 0.3s ease-in-out, transform 0.6s ease;
+  display: block;
 }
 
 .blur-image {
   filter: blur(5px);
-  transform: scale(1.1); /* 稍微放大以隐藏模糊边缘 */
+  transform: scale(1.05); /* 稍微放大以隐藏模糊边缘 */
 }
 
 .high-res-image {
@@ -239,8 +256,8 @@ export default {
   z-index: 2;
 }
 
-/* 确保容器有正确的宽高比 */
-.lazy-image-container::before {
+/* 当父容器没有明确高度时，使用默认宽高比 */
+.lazy-image-container:not(.has-explicit-height)::before {
   content: '';
   display: block;
   width: 100%;
@@ -248,7 +265,21 @@ export default {
   padding-bottom: 56.25%; /* 16:9 宽高比，可根据需要调整 */
 }
 
-.lazy-image-container > .lazy-image {
+.lazy-image-container:not(.has-explicit-height) > .lazy-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* 当父容器有明确高度时，模糊图片正常流布局，高清图片绝对定位覆盖 */
+.lazy-image-container.has-explicit-height > .blur-image {
+  position: relative;
+  display: block;
+}
+
+.lazy-image-container.has-explicit-height > .high-res-image {
   position: absolute;
   top: 0;
   left: 0;

@@ -36,6 +36,7 @@ const cardComponents = {
 .aside_card {
     padding: 20px;
     width: 100%;
+    min-width: 280px;
 }
 
 /* 移动端适配 */

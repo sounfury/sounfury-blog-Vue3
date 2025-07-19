@@ -59,7 +59,7 @@ async function loadSiteInfo() {
 
 onMounted(loadSiteInfo);
 </script>
-<style scoped>
+<style scoped lang="scss">
 .infoCard {
   & p {
     font-size: 14px;
@@ -69,17 +69,26 @@ onMounted(loadSiteInfo);
     display: flex;
     padding: 5px;
     color: var(--font-color);
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: nowrap;
   }
 }
 ul{
     padding-top: 10px;
 }
 .info_data {
-  width: 60%;
+  flex: 1;
   padding-left: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .info_num {
-  width: 40%;
+  flex-shrink: 0;
   text-align: right;
+  white-space: nowrap;
+  margin-left: 10px;
+  min-width: fit-content;
 }
 </style>

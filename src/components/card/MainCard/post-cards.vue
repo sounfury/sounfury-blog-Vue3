@@ -7,6 +7,7 @@
           :high-res-src="article.imageUrls.high"
           :mobile-high-res-src="article.imageUrls.mobileHigh"
           :alt="article.title + '缩略图'"
+          :use-aspect-ratio="false"
           class="article-image"
         />
       </router-link>
@@ -60,7 +61,7 @@ const processedArticles = computed(() => {
 })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .post_cards {
   a {
     width: 40%;
@@ -77,21 +78,6 @@ const processedArticles = computed(() => {
     display: flex;
     opacity: 1;
 
-    & img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: filter 375ms ease-in 0.2s, transform 0.6s;
-      transition-duration: 375ms, 0.6s;
-      transition-timing-function: ease-in, ease;
-      transition-delay: 0.2s, 0s;
-      transition-property: filter, transform;
-
-      &:hover {
-        transform: scale(1.1);
-      }
-    }
-
     .article-image {
       width: 100%;
       height: 100%;
@@ -100,16 +86,8 @@ const processedArticles = computed(() => {
         width: 100%;
         height: 100%;
 
-        &::before {
-          padding-bottom: 0; /* 移除默认宽高比，使用父容器的高度 */
-        }
-
         .lazy-image {
-          transition: filter 375ms ease-in 0.2s, transform 0.6s;
-          transition-duration: 375ms, 0.6s;
-          transition-timing-function: ease-in, ease;
-          transition-delay: 0.2s, 0s;
-          transition-property: filter, transform;
+          transition: filter 375ms ease-in 0.2s, transform 0.6s ease;
         }
       }
 
