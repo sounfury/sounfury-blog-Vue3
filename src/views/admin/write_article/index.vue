@@ -96,7 +96,7 @@
 <script setup>
 import { addArticle } from '@/api/article';
 import { updateArticle } from '@/api/article';
-import { getCategoryDict } from '@/api/category';
+import { getCategoryDict, addCategory } from '@/api/category';
 import { getArticleDetail } from '@/api/article';
 import { getTagsDict } from '@/api/tags';
 import { ref, onMounted, computed } from 'vue'
@@ -218,7 +218,7 @@ const handleUploadSuccess = (url) => {
 }
 
 // 处理markdown文件解析完成
-const handleMarkdownParsed = (result) => {
+const handleMarkdownParsed =async (result) => {
     // 填充表单数据
     articleForm.value.title = result.title
     articleForm.value.content = result.content
@@ -250,6 +250,30 @@ const handleMarkdownParsed = (result) => {
         if (frontMatter.thumbnail || frontMatter.image || frontMatter['封面图']) {
             articleForm.value.thumbnail = frontMatter.thumbnail || frontMatter.image || frontMatter['封面图']
         }
+
+          // 处理书名字段 - 自动分类到读书笔记
+        if (frontMatter['书名'] || frontMatter.book || frontMatter.bookName) {
+            try {
+                const readingNotesCategoryId = await ensureReadingNotesCategory();
+                if (readingNotesCategoryId) {
+                    articleForm.value.categoryId = readingNotesCategoryId;
+                    ElMessage.success('检测到书名，已自动分类到"读书笔记"');
+                }
+            } catch (error) {
+                console.error('处理读书笔记分类失败:', error);
+            }
+        }
+
+        // 处理作者字段
+        if (frontMatter['作者'] || frontMatter.author) {
+            const author = frontMatter['作者'] || frontMatter.author;
+            // 可以将作者信息添加到摘要或标签中
+            if (!articleForm.value.summary) {
+                articleForm.value.summary = `作者：${author}`;
+            } else if (!articleForm.value.summary.includes(author)) {
+                articleForm.value.summary += `\n作者：${author}`;
+            }
+        }
     }
 
     // 更新编辑器内容
@@ -261,6 +285,43 @@ const handleMarkdownParsed = (result) => {
 // 处理上传错误
 const handleUploadError = (error) => {
     console.error('文件上传错误:', error)
+}
+
+// 检查并创建"读书笔记"分类
+const ensureReadingNotesCategory = async () => {
+    try {
+        // 检查是否已存在"读书笔记"分类
+        const existingCategory = categoryOptions.value.find(cat => cat.label === '读书笔记');
+        if (existingCategory) {
+            return existingCategory.value;
+        }
+
+        // 如果不存在，创建新分类
+        const newCategoryData = {
+            name: '读书笔记',
+            description: '读书心得和书籍笔记',
+            pid: null, // 顶级分类
+            order: categoryOptions.value.length + 1
+        };
+
+        const response = await addCategory(newCategoryData);
+        if (response.code === '200' || response.data) {
+            // 重新获取分类列表以更新本地数据
+            const categoryRes = await getCategoryDict();
+            categoryOptions.value = Object.entries(categoryRes.data).map(([id, name]) => ({
+                label: name,
+                value: parseInt(id, 10)
+            }));
+
+            // 返回新创建的分类ID
+            const newCategory = categoryOptions.value.find(cat => cat.label === '读书笔记');
+            return newCategory ? newCategory.value : null;
+        }
+    } catch (error) {
+        console.error('创建读书笔记分类失败:', error);
+        ElMessage.warning('自动创建"读书笔记"分类失败，请手动选择分类');
+        return null;
+    }
 }
 
 // 表单校验函数
