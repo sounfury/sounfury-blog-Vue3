@@ -79,7 +79,13 @@ const getValue = () => {
     return vditorInstance.value?.getValue() || ''
 }
 
-defineExpose({ getValue })
+const setValue = (value) => {
+    if (isEditorReady.value && vditorInstance.value) {
+        vditorInstance.value.setValue(value)
+    }
+}
+
+defineExpose({ getValue, setValue })
 </script>
 
 <style scoped>
