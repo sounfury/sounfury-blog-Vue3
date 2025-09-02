@@ -1,8 +1,8 @@
-name: 部署博客
-on:
-  push:
-    branches:
-      - main  # 仅在推送到 main 分支时触发
+# name: 部署博客
+# on:
+#   push:
+#     branches:
+#       - main  # 仅在推送到 main 分支时触发
 jobs:
   deploy:
     runs-on: ubuntu-latest
