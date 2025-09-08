@@ -1,5 +1,5 @@
 <template>
-  <div 
+  <div
     class="card"
     :class="[{ item: enableAnimation && !hasShown }, { active: isVisible }]"
     ref="cardRef">

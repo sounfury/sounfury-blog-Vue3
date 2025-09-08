@@ -1,6 +1,6 @@
 <template>
     <div>
-        <component v-for="card in activeCards" :key="card" :is="cardComponents[card] " 
+        <component v-for="card in activeCards" :key="card" :is="cardComponents[card] "
         class="aside_card" />
     </div>
 </template>
@@ -20,6 +20,7 @@ import noticeCard from '../AsideCard/notice-card.vue';
 import weatherCard from '../AsideCard/weather-card.vue';
 import filingCard from '../AsideCard/archive-card.vue';
 import infoCard from '../AsideCard/info-card.vue';
+// import aiCard from '../AsideCard/ai-card.vue';
 
 
 const cardComponents = {
@@ -28,6 +29,7 @@ const cardComponents = {
     weather: weatherCard,
     filing: filingCard,
     info: infoCard
+    // ai: aiCard
 }
 
 </script>
