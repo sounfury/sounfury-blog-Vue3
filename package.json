@@ -43,6 +43,7 @@
     "qweather-icons": "^1.6.0",
     "sortablejs": "^1.15.6",
     "sweetalert2": "^11.14.5",
+    "unplugin-vue-components": "^29.0.0",
     "vditor": "^3.10.8",
     "vue": "^3.3.11",
     "vue-draggable-next": "^2.2.1",
@@ -64,5 +65,8 @@
     "vite-plugin-compression": "0.5.1",
     "vite-plugin-svg-icons": "2.0.1",
     "vite-plugin-vue-setup-extend": "0.4.0"
+  },
+  "volta": {
+    "node": "21.7.3"
   }
 }

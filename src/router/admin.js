@@ -73,6 +73,59 @@ export const adminRoutes = [
         },
       },
       {
+        path: "ai",
+        name: "aiManagement",
+        component: () => import("@/views/admin/ai/index.vue"),
+        redirect: "/admin/ai/global-memory",
+        meta: {
+          title: "AI 管理",
+          icon: "MagicStick",
+          roles: ["ADMIN"],
+        },
+        children: [
+          {
+            path: "global-memory",
+            name: "globalMemoryManagement",
+            component: () => import("@/views/admin/ai/global-memory.vue"),
+            meta: {
+              title: "全局记忆管理",
+              icon: "Collection",
+              roles: ["ADMIN"],
+            },
+          },
+          {
+            path: "llm-config",
+            name: "llmConfigManagement",
+            component: () => import("@/views/admin/ai/llm-config.vue"),
+            meta: {
+              title: "AI配置管理",
+              icon: "Connection",
+              roles: ["ADMIN"],
+            },
+          },
+          {
+            path: "personas",
+            name: "personaManagement",
+            component: () => import("@/views/admin/ai/personas.vue"),
+            meta: {
+              title: "角色管理",
+              icon: "Avatar",
+              roles: ["ADMIN"],
+            },
+          },
+          {
+            path: "toolbox",
+            name: "toolboxManagement",
+            component: () => import("@/views/admin/ai/toolbox.vue"),
+            meta: {
+              title: "工具箱",
+              icon: "Box",
+              roles: ["ADMIN"],
+            },
+          },
+        ],
+      },
+      {
         path: "settings",
         name: "blogSettings",
         component: () => import("@/views/admin/settings/index.vue"),

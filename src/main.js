@@ -55,7 +55,12 @@ app.directive("highlight", {
   },
 })
 
-app.use(ElementPlus)
+// Element Plus 全局配置
+app.use(ElementPlus, {
+    // 设置全局 z-index 基础值，确保弹窗层级高于侧边栏
+    // 解决管理后台弹窗遮罩无法覆盖侧边栏的问题
+    zIndex: 3000
+})
 
 app.component("font-awesome-icon", FontAwesomeIcon)
 

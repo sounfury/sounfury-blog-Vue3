@@ -6,7 +6,6 @@
 </template>
 
 <script setup>
-import { defineAsyncComponent } from 'vue'
 
 const props = defineProps({
     activeCards: {
@@ -20,7 +19,6 @@ import noticeCard from '../AsideCard/notice-card.vue';
 import weatherCard from '../AsideCard/weather-card.vue';
 import filingCard from '../AsideCard/archive-card.vue';
 import infoCard from '../AsideCard/info-card.vue';
-// import aiCard from '../AsideCard/ai-card.vue';
 
 
 const cardComponents = {
@@ -28,8 +26,7 @@ const cardComponents = {
     notice: noticeCard,
     weather: weatherCard,
     filing: filingCard,
-    info: infoCard
-    // ai: aiCard
+    info: infoCard,
 }
 
 </script>

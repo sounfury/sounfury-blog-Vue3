@@ -119,3 +119,20 @@
 .el-message-box__btns{
     gap:10px;
 }
+
+// 修复管理后台弹窗遮罩层级问题
+// 确保弹窗和遮罩能够覆盖侧边栏
+.el-overlay {
+    // 确保遮罩层有足够高的层级
+    z-index: 2000 !important;
+}
+
+.el-dialog__wrapper {
+    // 确保弹窗包装器层级正确
+    z-index: 2001 !important;
+}
+
+// 特别处理嵌套弹窗的情况
+.el-dialog__wrapper + .el-dialog__wrapper {
+    z-index: 2002 !important;
+}

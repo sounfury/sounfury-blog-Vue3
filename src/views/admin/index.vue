@@ -11,8 +11,11 @@ import {
     Expand,
     Fold,
     ColdDrink,
-Orange,
-Collection
+    Orange,
+    Collection,
+    MagicStick,
+    Connection,
+    Box
 } from '@element-plus/icons-vue'
 import { useRouter, useRoute } from 'vue-router'
 import { gsap } from 'gsap'
@@ -52,6 +55,38 @@ const menuItems = [
         title: '撰写文章',
         icon: Edit,
         path: '/admin/write'
+    },
+    {
+        name: 'aiManagement',
+        title: 'AI 管理',
+        icon: MagicStick,
+        path: '/admin/ai',
+        children: [
+            {
+                name: 'globalMemoryManagement',
+                title: '全局记忆管理',
+                icon: Collection,
+                path: '/admin/ai/global-memory'
+            },
+            {
+                name: 'llmConfigManagement',
+                title: 'AI配置管理',
+                icon: Connection,
+                path: '/admin/ai/llm-config'
+            },
+            {
+                name: 'personaManagement',
+                title: '角色管理',
+                icon: Connection,
+                path: '/admin/ai/personas'
+            },
+            {
+                name: 'toolboxManagement',
+                title: '工具箱',
+                icon: Box,
+                path: '/admin/ai/toolbox'
+            }
+        ]
     },
     {
         name: 'themeManagement',
@@ -254,10 +289,10 @@ watch(
                 </el-menu>
             </div>
         </div>
-        <div class="flex-1 overflow-auto  m-2
+        <div class="flex-1 overflow-auto  
              backdrop-blur-md bg-white/90
               rounded-2xl shadow-lg ">
-            <div ref="mainContentRef" class="relative backdrop-blur-md  p-6 min-h-full transform-gpu">
+            <div ref="mainContentRef" class="relative backdrop-blur-md   min-h-full transform-gpu">
                 <!-- 头像组件 -->
                 <el-avatar :size="50" :src="icon" class="absolute top-4 right-4 cursor-pointer z-50" @click="goToHome"
                     title="回到博客前台" />

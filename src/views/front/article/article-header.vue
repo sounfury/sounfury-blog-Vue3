@@ -30,7 +30,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue"
+import { ref, watch } from "vue"
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"
 
 const isShow = ref(false)
@@ -50,7 +50,7 @@ watch(
     { immediate: true }
 )
 </script>
-<style scoped>
+<style scoped lang="scss">
 header {
     object-fit: cover;
     background-size: cover;

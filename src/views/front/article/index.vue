@@ -1,9 +1,15 @@
 <template>
   <div class="article_page ">
     <article-header v-bind="data" />
+    
+    <!-- AI 文章总结 -->
+    <div class="w-full lg:w-[95%] lg:m-auto px-0 lg:px-8">
+      <ArticleSummary :article-id="articleId" />
+    </div>
+    
     <div class="w-full lg:w-[95%] lg:m-auto">
       <div class="flex flex-col lg:flex-row gap-0 lg:gap-12 p-0 lg:p-8 flex-1" :class="{'lg:justify-center': !hasToc}">
-        <card class="mark_body article w-full order-2 lg:order-1" :class="{'lg:w-[70%]': hasToc, 'lg:w-[85%]': !hasToc}">
+        <card class="mark_body article w-full order-2 lg:order-1" :class="{'lg:w-[80%]': hasToc, 'lg:w-[85%]': !hasToc}">
           <div ref="articleContent" v-html="result"></div>
         </card>
 
@@ -44,12 +50,14 @@ import { useRouter } from "vue-router"
 import Card from "@/components/card/BaseCard/card.vue"
 import { MdToHtml, copyCode } from "@/utils/markdown.js"
 import articleHeader from "./article-header.vue"
+import ArticleSummary from "@/components/ai/front/ArticleSummary.vue"
 import { getArticle } from "@/api/article"
 
 const router = useRouter()
 const result = ref("")
 const content = ref("")
 const data = ref({})
+const articleId = ref(null)
 const meta = reactive({
   createTime: "",
   updateTime: "",
@@ -139,6 +147,7 @@ function renderMarkdownAndCheckToc() {
 
 onMounted(async () => {
   const id = router.currentRoute.value.params.id
+  articleId.value = parseInt(id) || id
   await fetchArticle(id)
   nextTick(renderMarkdownAndCheckToc)
 })

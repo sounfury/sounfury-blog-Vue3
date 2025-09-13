@@ -391,7 +391,7 @@ loadCategories();
         </div>
 
         <!-- 新增/编辑对话框 -->
-        <el-dialog v-model="dialogVisible" align-center :title="dialogTitle" width="500px" class="category-dialog">
+        <el-dialog v-model="dialogVisible" align-center :title="dialogTitle" width="500px" class="category-dialog" append-to-body>
             <el-form ref="formRef" label-width="80px">
                 <el-form-item label="名称">
                     <el-input v-model="currentCategory.name" placeholder="请输入分类名称" />

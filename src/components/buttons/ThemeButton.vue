@@ -63,6 +63,7 @@ function toggleTheme(event) {
   }
 
   console.log("startViewTransition");
+  
   // 开始一次视图过渡：
   const transition = document.startViewTransition(() => changeTheme())
   transition.ready.then(() => {
@@ -77,6 +78,10 @@ function toggleTheme(event) {
       `circle(0px at ${x}px ${y}px)`,
       `circle(${endRadius}px at ${x}px ${y}px)`,
     ]
+    
+    // 使用切换后的状态判断（与官方示例一致）
+    const isDark = themeStore.currentMode === 1;
+    
     //开始动画
     document.documentElement.animate(
       {
@@ -86,8 +91,8 @@ function toggleTheme(event) {
         duration: 300,
         easing: "ease-in",
         pseudoElement: isDark  //指定要应用动画的伪元素
-          ? "::view-transition-old(root)"//如果黑暗模式则使用旧的伪元素
-          : "::view-transition-new(root)",
+          ? "::view-transition-old(root)"//如果切换后为暗色则使用旧层
+          : "::view-transition-new(root)",//如果切换后为亮色则使用新层
       }
     )
   })
@@ -97,6 +102,9 @@ function toggleTheme(event) {
 function fallbackAnimation(event) {
   const x = event.clientX;
   const y = event.clientY;
+
+  // 在切换前保存当前状态，用于判断动画背景色
+  const isLightToDark = themeStore.currentMode === 0;
 
   // 移除已存在的动画层
   const existingAnimation = document.querySelector(".theme-animation");
@@ -111,6 +119,9 @@ function fallbackAnimation(event) {
   // 设置动画层的位置和样式
   animationLayer.style.setProperty("--x", `${x}px`);
   animationLayer.style.setProperty("--y", `${y}px`);
+  
+  // 根据切换方向设置背景色
+  animationLayer.style.backgroundColor = isLightToDark ? "#1d1f2c" : "#f3fdff";
 
   // 添加到页面
   document.body.appendChild(animationLayer);

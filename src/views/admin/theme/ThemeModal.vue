@@ -1,6 +1,7 @@
 <template>
-    <div v-if="isVisible"
-        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fade-in">
+    <Teleport to="body">
+        <div v-if="isVisible"
+            class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999] animate-fade-in">
         <div class="bg-white rounded-xl p-8 w-full max-w-xl shadow-2xl">
             <h2 class="text-2xl font-bold mb-6 text-gray-800">
                 {{ isEditMode ? '编辑主题' : '新增主题' }}
@@ -88,7 +89,8 @@
                 </div>
             </form>
         </div>
-    </div>
+        </div>
+    </Teleport>
 </template>
 
 <script setup>

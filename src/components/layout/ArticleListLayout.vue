@@ -29,7 +29,7 @@ const props = defineProps({
   },
   sidebarCards: {
     type: Array,
-    default: () => ['aboutMe', 'notice', 'weather', 'filing', 'info']
+    default: () => ['aboutMe', 'notice', 'weather', 'filing', 'info','ai']
   }
 })
 </script>

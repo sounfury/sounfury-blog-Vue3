@@ -18,17 +18,26 @@
         <Footer />
       </el-footer>
     </el-container>
+    
+    <!-- AI 聊天功能 -->
+    <AiFloatingButton />
+    <AiChatDrawer />
+    <AiFullscreenChat />
   </div>
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, onBeforeMount } from "vue"
+import { ref, reactive, onMounted, onBeforeMount, computed } from "vue"
 import Footer from "@/components/layout/footer.vue"
 import Nav from "@/components/layout/nav.vue"
 import commonHeader from "@/components/layout/common-header.vue"
 import { useRoute } from "vue-router"  // 导入 useRoute
 import scrollpage from "@/components/scrollpage/scrollpage.vue"
-import useSettings from "@/store/modules/settings";
+import useSettings from "@/store/modules/settings"
+import AiFloatingButton from "@/components/ai/front/AiFloatingButton.vue"
+import AiChatDrawer from "@/components/ai/front/AiChatDrawer.vue"
+import AiFullscreenChat from "@/components/ai/front/AiFullscreenChat.vue"
+import DinoLoader from "@/components/loading/DinoLoader.vue"
 const cachedRoutes = ['home', 'b']
 
 const menuItems = ref([
